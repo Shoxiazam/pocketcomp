@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PocketComp — твой компьютер в кармане</title>
+<meta name="description" content="PocketComp: экран, мышь, клавиатура, файлы и камера ноутбука — с телефона, из любой точки мира. Канал зашифрован от начала до конца.">
+<meta name="theme-color" content="#0e1116">
+<meta property="og:title" content="PocketComp — твой компьютер в кармане">
+<meta property="og:description" content="Управляй ноутбуком с телефона: экран до 60 к/с, файлы, камера, буфер обмена. Зашифровано от начала до конца.">
+<meta property="og:image" content="icon.png">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon.png">
+<style>
+  :root{
+    --bg:#0e1116; --s1:#151a22; --s2:#1c222c; --s3:#252d3a; --line:#232a36;
+    --txt:#e8ebf2; --mut:#9aa3b5; --acc:#5aa2ff; --acc2:#8b7bff; --acc-ink:#06101e;
+    --ok:#3fcf8e; --warn:#f0b24a; --bad:#ff6b6b;
+    --r:18px; --r-s:12px; --ease:cubic-bezier(.23,1,.32,1);
+    --wrap:1160px; --gut:clamp(16px,4vw,32px);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--bg);color:var(--txt);
+    font:400 clamp(15px,1.05vw + 11px,17px)/1.55 -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",system-ui,sans-serif;
+    overflow-x:hidden}
+  a{color:inherit}
+  img{max-width:100%}
+  .wrap{max-width:var(--wrap);margin:0 auto;padding:0 var(--gut)}
+  h1,h2,h3{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",system-ui,sans-serif;
+    letter-spacing:-.025em;margin:0;line-height:1.08}
+  h1{font-size:clamp(38px,6.2vw,76px);font-weight:750}
+  h2{font-size:clamp(28px,3.6vw,46px);font-weight:700}
+  h3{font-size:clamp(17px,1.3vw + 10px,20px);font-weight:650;letter-spacing:-.01em}
+  p{margin:0}
+  .lead{color:var(--mut);font-size:clamp(17px,1.3vw + 11px,21px);max-width:38ch}
+  .kicker{color:var(--acc);font-weight:600;font-size:14px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:14px}
+  .grad{background:linear-gradient(100deg,var(--acc),var(--acc2));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 22px;border-radius:999px;
+    font:inherit;font-weight:600;text-decoration:none;border:1px solid var(--line);background:var(--s1);color:var(--txt);cursor:pointer;
+    transition:transform .18s var(--ease),background .18s,border-color .18s}
+  .btn:hover{background:var(--s2);border-color:var(--s3)}
+  .btn:active{transform:scale(.97)}
+  .btn.pri{background:var(--acc);border-color:transparent;color:var(--acc-ink)}
+  .btn.pri:hover{background:#78b4ff}
+  :focus-visible{outline:2px solid var(--acc);outline-offset:3px;border-radius:6px}
+  .ic{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;flex:none}
+
+  /* шапка */
+  header{position:sticky;top:0;z-index:20;background:rgba(14,17,22,.78);backdrop-filter:saturate(1.4) blur(14px);
+    -webkit-backdrop-filter:saturate(1.4) blur(14px);border-bottom:1px solid rgba(35,42,54,.7)}
+  .bar{display:flex;align-items:center;gap:18px;height:64px}
+  .logo{display:flex;align-items:center;gap:10px;font-weight:750;font-size:19px;letter-spacing:-.02em;text-decoration:none}
+  .logo img{width:32px;height:32px;border-radius:9px}
+  nav.links{display:flex;gap:22px;margin-left:12px}
+  nav.links a{color:var(--mut);text-decoration:none;font-size:15px}
+  nav.links a:hover{color:var(--txt)}
+  .grow{flex:1}
+  .lang{display:flex;background:var(--s1);border:1px solid var(--line);border-radius:999px;padding:3px}
+  .lang button{font:inherit;font-size:13px;font-weight:600;color:var(--mut);background:none;border:0;border-radius:999px;
+    padding:6px 10px;cursor:pointer;min-width:40px}
+  .lang button[aria-pressed=true]{background:var(--s3);color:var(--txt)}
+  @media (max-width:880px){nav.links{display:none}}
+  @media (max-width:520px){.bar .btn{display:none}}
+
+  /* первый экран */
+  .hero{position:relative;overflow:hidden;padding:clamp(48px,8vw,104px) 0 clamp(40px,6vw,80px)}
+  .hero::before{content:"";position:absolute;inset:-20% -10% auto;height:620px;pointer-events:none;
+    background:radial-gradient(50% 50% at 70% 40%,rgba(90,162,255,.18),transparent 70%),
+               radial-gradient(40% 40% at 25% 20%,rgba(139,123,255,.12),transparent 70%)}
+  .hero .split{position:relative;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(28px,5vw,64px);align-items:center}
+  @media (max-width:900px){.hero .split{grid-template-columns:minmax(0,1fr)}}
+  .hero h1{margin-bottom:22px}
+  .cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
+  .badges{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:28px;color:var(--mut);font-size:14px}
+  .badges span{display:inline-flex;align-items:center;gap:7px}
+  .badges .ic{width:18px;height:18px;color:var(--ok)}
+
+  /* сцена: ноутбук и телефон */
+  .scene{position:relative;aspect-ratio:1.15;min-height:300px}
+  .laptop{position:absolute;left:0;top:6%;width:84%}
+  .lid{background:#0a0d12;border:2px solid #2b3342;border-radius:14px 14px 4px 4px;padding:10px;aspect-ratio:16/10}
+  .base{height:14px;background:linear-gradient(#2b3342,#1a2029);border-radius:0 0 14px 14px;margin:0 -5%}
+  .desk{position:relative;width:100%;height:100%;border-radius:6px;overflow:hidden;
+    background:linear-gradient(135deg,#1d3557 0%,#264b7a 45%,#5a4fb5 100%)}
+  .win{position:absolute;background:rgba(232,235,242,.94);border-radius:6px;box-shadow:0 8px 24px rgba(0,0,0,.35)}
+  .win::before{content:"";position:absolute;left:0;right:0;top:0;height:14%;background:#dfe4ee;border-radius:6px 6px 0 0}
+  .w1{left:8%;top:12%;width:52%;height:56%}
+  .w2{left:44%;top:34%;width:46%;height:50%;background:rgba(21,26,34,.96)}
+  .w2::before{background:#252d3a}
+  .line{position:absolute;left:8%;height:5%;border-radius:3px;background:#b9c2d3}
+  .w2 .line{background:#3a4456}
+  .taskbar{position:absolute;left:0;right:0;bottom:0;height:9%;background:rgba(10,13,18,.72)}
+  .cursor{position:absolute;width:16px;height:22px;left:30%;top:40%;z-index:3;
+    animation:move 7s var(--ease) infinite;filter:drop-shadow(0 1px 1px rgba(0,0,0,.5))}
+  @keyframes move{0%,100%{transform:translate(0,0)}25%{transform:translate(140%,-60%)}50%{transform:translate(380%,90%)}75%{transform:translate(90%,160%)}}
+  .phone{position:absolute;right:0;bottom:0;width:36%;aspect-ratio:9/19.3;background:#07090c;border:2px solid #2f3846;
+    border-radius:clamp(22px,3.4vw,38px);padding:7px;box-shadow:0 30px 60px rgba(0,0,0,.55)}
+  .phone .scr{position:relative;width:100%;height:100%;border-radius:clamp(16px,2.6vw,30px);overflow:hidden;background:var(--bg);
+    display:flex;flex-direction:column}
+  .island{width:34%;height:3.2%;background:#000;border-radius:99px;margin:5% auto 0}
+  .mirror{margin:8% 6% 0;border-radius:8px;overflow:hidden;aspect-ratio:16/10;position:relative}
+  .mirror .desk{border-radius:8px}
+  .pad{flex:1;margin:6%;border-radius:12px;background:var(--s1);border:1px solid var(--line);position:relative}
+  .tap{position:absolute;width:22%;aspect-ratio:1;border-radius:50%;background:rgba(90,162,255,.35);left:40%;top:40%;
+    animation:tap 7s var(--ease) infinite}
+  @keyframes tap{0%,100%{transform:translate(0,0) scale(.7);opacity:.2}25%{transform:translate(60%,-40%) scale(1);opacity:.9}
+    50%{transform:translate(150%,50%) scale(.8);opacity:.6}75%{transform:translate(30%,90%) scale(1);opacity:.9}}
+  .keys{display:grid;grid-template-columns:repeat(4,1fr);gap:5%;margin:0 6% 8%}
+  .keys i{display:block;aspect-ratio:1.6;border-radius:7px;background:var(--s2)}
+  .link{position:absolute;left:58%;top:58%;width:22%;height:2px;transform:rotate(28deg);transform-origin:left;
+    background:repeating-linear-gradient(90deg,var(--acc) 0 8px,transparent 8px 14px);opacity:.8;animation:flow 1.2s linear infinite}
+  @keyframes flow{to{background-position:28px 0}}
+
+  /* секции */
+  section.block{padding:clamp(64px,9vw,120px) 0}
+  .head{max-width:760px;margin-bottom:clamp(32px,4vw,52px)}
+  .head p{margin-top:16px}
+  .facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:clamp(36px,5vw,64px)}
+  @media (max-width:820px){.facts{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  .fact{background:var(--s1);border:1px solid var(--line);border-radius:var(--r);padding:20px}
+  .fact b{display:block;font-size:clamp(28px,3vw,38px);font-weight:750;letter-spacing:-.03em}
+  .fact span{color:var(--mut);font-size:14px}
+
+  .problems{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+  @media (max-width:820px){.problems{grid-template-columns:minmax(0,1fr)}}
+  .problem{padding:22px;border-radius:var(--r);background:var(--s1);border:1px solid var(--line)}
+  .problem .q{font-size:clamp(17px,1.2vw + 11px,20px);font-weight:600;margin-bottom:8px}
+  .problem p{color:var(--mut)}
+
+  .features{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+  @media (max-width:980px){.features{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media (max-width:600px){.features{grid-template-columns:minmax(0,1fr)}}
+  .feat{padding:24px;border-radius:var(--r);background:var(--s1);border:1px solid var(--line);transition:border-color .2s,transform .25s var(--ease)}
+  .feat:hover{border-color:var(--s3);transform:translateY(-2px)}
+  .feat .ic{width:26px;height:26px;color:var(--acc);margin-bottom:16px}
+  .feat h3{margin-bottom:8px}
+  .feat p{color:var(--mut);font-size:15px}
+  .feat.big{background:linear-gradient(135deg,rgba(90,162,255,.12),rgba(139,123,255,.08)),var(--s1)}
+  @media (max-width:980px) and (min-width:601px){.feat.big{grid-column:span 2}}   /* 9 карточек: 3×3 или 1+4×2 без «сирот» */
+
+  .steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;counter-reset:s}
+  @media (max-width:820px){.steps{grid-template-columns:minmax(0,1fr)}}
+  .step{padding:26px;border-radius:var(--r);border:1px solid var(--line);background:var(--s1);position:relative}
+  .step::before{counter-increment:s;content:counter(s);display:grid;place-items:center;width:36px;height:36px;border-radius:50%;
+    background:var(--acc);color:var(--acc-ink);font-weight:750;margin-bottom:18px}
+  .step p{color:var(--mut);margin-top:8px}
+  .flow{display:flex;align-items:center;justify-content:center;gap:clamp(10px,3vw,28px);flex-wrap:wrap;margin-top:34px;
+    padding:26px;border-radius:var(--r);border:1px dashed var(--s3);color:var(--mut);text-align:center;font-size:15px}
+  .flow b{color:var(--txt);display:block;font-size:16px}
+  .flow .arrow{color:var(--acc);font-size:22px}
+
+  .sec{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(24px,4vw,56px);align-items:start}
+  @media (max-width:880px){.sec{grid-template-columns:minmax(0,1fr)}}
+  .checks{list-style:none;padding:0;margin:0;display:grid;gap:14px}
+  .checks li{display:flex;gap:12px;padding:16px 18px;border-radius:var(--r-s);background:var(--s1);border:1px solid var(--line)}
+  .checks .ic{color:var(--ok);margin-top:1px}
+  .checks b{display:block}
+  .checks span{color:var(--mut);font-size:15px}
+
+  .admin{border-radius:var(--r);border:1px solid var(--line);background:var(--s1);padding:18px;font-size:13px}
+  .admin .row{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+  .admin .dot{width:8px;height:8px;border-radius:50%;background:var(--ok)}
+  .admin .tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:12px}
+  .admin .tile{background:var(--s2);border-radius:10px;padding:12px}
+  .admin .tile small{color:var(--mut);display:block}
+  .admin .tile b{font-size:20px}
+  .admin .sw{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-top:1px solid var(--line);color:var(--mut)}
+  .admin .sw i{width:34px;height:20px;border-radius:10px;background:var(--ok);position:relative}
+  .admin .sw i::after{content:"";position:absolute;right:3px;top:3px;width:14px;height:14px;border-radius:50%;background:#fff}
+  .admin .sw i.off{background:var(--s3)} .admin .sw i.off::after{right:auto;left:3px}
+
+  .road{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+  @media (max-width:820px){.road{grid-template-columns:minmax(0,1fr)}}
+  .phase{padding:24px;border-radius:var(--r);border:1px solid var(--line);background:var(--s1)}
+  .phase .tag{display:inline-block;font-size:12.5px;font-weight:650;padding:4px 10px;border-radius:999px;background:var(--s2);color:var(--mut);margin-bottom:14px}
+  .phase.now .tag{background:rgba(63,207,142,.15);color:var(--ok)}
+  .phase ul{margin:12px 0 0;padding-left:18px;color:var(--mut)}
+  .phase li{margin:6px 0}
+
+  .team{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+  .member{padding:24px;border-radius:var(--r);border:1px solid var(--line);background:var(--s1);display:flex;gap:14px;align-items:center}
+  .ava{width:52px;height:52px;border-radius:50%;flex:none;display:grid;place-items:center;font-weight:750;font-size:20px;
+    background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff}
+  .member span{color:var(--mut);font-size:14px;display:block}
+
+  .final{text-align:center;padding:clamp(56px,8vw,96px) var(--gut);border-radius:28px;margin:0 auto;
+    background:radial-gradient(70% 90% at 50% 0%,rgba(90,162,255,.2),transparent 70%),var(--s1);border:1px solid var(--line)}
+  .final p{margin:16px auto 0}
+  .final .cta{justify-content:center}
+  footer{padding:40px 0 calc(40px + env(safe-area-inset-bottom));color:var(--mut);font-size:14px}
+  footer .wrap{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center}
+
+  .reveal{transform:translateY(18px);transition:transform .7s var(--ease)}
+  .reveal.in{transform:none}
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation:none!important;transition:none!important}
+    html{scroll-behavior:auto}
+    .reveal{transform:none}
+  }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <symbol id="i-screen" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></symbol>
+  <symbol id="i-cursor" viewBox="0 0 24 24"><path d="M5 3l14 7-6 2-2 6z"/></symbol>
+  <symbol id="i-clip" viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="17" rx="2"/><path d="M9 4h6v3H9z"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/></symbol>
+  <symbol id="i-cam" viewBox="0 0 24 24"><path d="M3 8a2 2 0 012-2h2.5l1.5-2h6l1.5 2H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><circle cx="12" cy="13" r="3.5"/></symbol>
+  <symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></symbol>
+  <symbol id="i-app" viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></symbol>
+  <symbol id="i-music" viewBox="0 0 24 24"><path d="M9 18V5l11-2v13"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/></symbol>
+  <symbol id="i-power" viewBox="0 0 24 24"><path d="M12 3v8M6.3 7a8 8 0 1011.4 0"/></symbol>
+  <symbol id="i-rec" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3.5"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 0112 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 004 0"/></symbol>
+  <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 3L5 13.5h6L10 21l8-10.5h-6z"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-tg" viewBox="0 0 24 24"><path d="M21 4L3 11l6 2 2 6 3-4 5 4z"/><path d="M9 13l9-7"/></symbol>
+</defs></svg>
+
+<header>
+  <div class="wrap bar">
+    <a class="logo" href="#top" aria-label="PocketComp"><img src="icon-192.png" alt="" width="32" height="32">PocketComp</a>
+    <nav class="links" aria-label="Разделы">
+      <a href="#features" data-i="nav.features">Возможности</a>
+      <a href="#how" data-i="nav.how">Как работает</a>
+      <a href="#security" data-i="nav.security">Безопасность</a>
+      <a href="#team" data-i="nav.team">Команда</a>
+    </nav>
+    <span class="grow"></span>
+    <div class="lang" role="group" aria-label="Язык">
+      <button data-lang="ru" aria-pressed="true">RU</button><button data-lang="uz" aria-pressed="false">UZ</button><button data-lang="en" aria-pressed="false">EN</button>
+    </div>
+    <a class="btn pri" href="#contact" data-i="nav.cta">Попробовать</a>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap split">
+      <div>
+        <div class="kicker" data-i="hero.kicker">Удалённый доступ к своему компьютеру</div>
+        <h1><span data-i="hero.t1">Твой компьютер —</span> <span class="grad" data-i="hero.t2">в кармане.</span></h1>
+        <p class="lead" data-i="hero.lead">Экран, мышь, клавиатура, файлы и камера ноутбука — с телефона, из любой точки мира. Канал зашифрован от начала до конца: картинку видите только вы.</p>
+        <div class="cta">
+          <a class="btn pri" href="#contact"><span data-i="hero.cta">Получить доступ</span><svg class="ic"><use href="#i-arrow"/></svg></a>
+          <a class="btn" href="#how" data-i="hero.how">Как это работает</a>
+        </div>
+        <div class="badges">
+          <span><svg class="ic"><use href="#i-check"/></svg><span data-i="hero.b1">Без App Store — открывается как приложение</span></span>
+          <span><svg class="ic"><use href="#i-check"/></svg><span data-i="hero.b2">Windows и macOS</span></span>
+          <span><svg class="ic"><use href="#i-check"/></svg><span data-i="hero.b3">iPhone и Android</span></span>
+        </div>
+      </div>
+      <div class="scene" aria-hidden="true">
+        <div class="laptop">
+          <div class="lid"><div class="desk">
+            <div class="win w1"><i class="line" style="top:26%;width:70%"></i><i class="line" style="top:38%;width:56%"></i><i class="line" style="top:50%;width:64%"></i></div>
+            <div class="win w2"><i class="line" style="top:28%;width:60%"></i><i class="line" style="top:42%;width:74%"></i><i class="line" style="top:56%;width:48%"></i></div>
+            <div class="taskbar"></div>
+            <svg class="cursor" viewBox="0 0 16 22"><path d="M1 1l13 12-6 1-3 6z" fill="#fff" stroke="#111" stroke-width="1.2" stroke-linejoin="round"/></svg>
+          </div></div>
+          <div class="base"></div>
+        </div>
+        <div class="link"></div>
+        <div class="phone"><div class="scr">
+          <div class="island"></div>
+          <div class="mirror"><div class="desk">
+            <div class="win w1"></div><div class="win w2"></div><div class="taskbar"></div>
+          </div></div>
+          <div class="pad"><span class="tap"></span></div>
+          <div class="keys"><i></i><i></i><i></i><i></i></div>
+        </div></div>
+      </div>
+    </div>
+    <div class="wrap" style="position:relative">
+      <div class="facts">
+        <div class="fact reveal"><b>60 <small style="font-size:.5em;color:var(--mut)" data-i="f.fps">к/с</small></b><span data-i="f.1">экран в реальном времени, видео H.264</span></div>
+        <div class="fact reveal"><b>0</b><span data-i="f.2">кадров хранится на чужих серверах: всё идёт напрямую на телефон</span></div>
+        <div class="fact reveal"><b>~1 <small style="font-size:.5em;color:var(--mut)" data-i="f.min">мин</small></b><span data-i="f.3">подключить телефон: отсканировать QR-код</span></div>
+        <div class="fact reveal"><b>50 <small style="font-size:.5em;color:var(--mut)" data-i="f.mb">МБ</small></b><span data-i="f.4">памяти занимает сервер на ноутбуке</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="problem" style="padding-top:0">
+    <div class="wrap">
+      <div class="head reveal">
+        <div class="kicker" data-i="p.kicker">Зачем</div>
+        <h2 data-i="p.title">Компьютер дома, а нужен он прямо сейчас</h2>
+      </div>
+      <div class="problems">
+        <div class="problem reveal"><div class="q" data-i="p.q1">«Файл остался на ноутбуке»</div><p data-i="p.a1">Открой папку с телефона и забери файл — или отправь с телефона на ноутбук.</p></div>
+        <div class="problem reveal"><div class="q" data-i="p.q2">«Забыл выключить или закрыть»</div><p data-i="p.a2">Заблокируй, усыпи или выключи компьютер одним касанием, где бы ты ни был.</p></div>
+        <div class="problem reveal"><div class="q" data-i="p.q3">«Нужно что-то сделать на компьютере»</div><p data-i="p.a3">Полный экран и управление: мышь, клавиатура, программы — как будто сидишь за ним.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="features" style="padding-top:0">
+    <div class="wrap">
+      <div class="head reveal">
+        <div class="kicker" data-i="ft.kicker">Возможности</div>
+        <h2 data-i="ft.title">Всё, что умеет ноутбук, — в твоём телефоне</h2>
+        <p class="lead" data-i="ft.lead">Один пульт вместо десятка приложений. Работает в браузере телефона и ставится на экран «Домой».</p>
+      </div>
+      <div class="features">
+        <div class="feat big reveal"><svg class="ic"><use href="#i-screen"/></svg><h3 data-i="ft.1t">Экран и управление до 60 к/с</h3><p data-i="ft.1p">Видео H.264 или передача только изменившихся частей экрана. Качество само подстраивается под связь — от 3G до Wi-Fi. Поверни телефон — экран на весь дисплей.</p></div>
+        <div class="feat reveal"><svg class="ic"><use href="#i-cursor"/></svg><h3 data-i="ft.2t">Мышь и клавиатура</h3><p data-i="ft.2p">Тачпад, правый и двойной клик, прокрутка, горячие клавиши: Alt+Tab, копировать, вставить.</p></div>
+        <div class="feat reveal"><svg class="ic"><use href="#i-file"/></svg><h3 data-i="ft.3t">Файлы туда и обратно</h3><p data-i="ft.3p">Забери файл с ноутбука или отправь с телефона — фото, документы, что угодно.</p></div>
+        <div class="feat reveal"><svg class="ic"><use href="#i-clip"/></svg><h3 data-i="ft.4t">Общий буфер обмена</h3><p data-i="ft.4p">Скопировал на телефоне — вставил на компьютере. И наоборот.</p></div>
+        <div class="feat reveal"><svg class="ic"><use href="#i-cam"/></svg><h3 data-i="ft.5t">Камера ноутбука</h3><p data-i="ft.5p">Посмотри, что происходит дома: 720p с максимальной частотой камеры, фото и запись.</p></div>
+        <div class="feat reveal"><svg class="ic"><use href="#i-mic"/></svg><h3 data-i="ft.6t">Микрофон и звук</h3><p data-i="ft.6p">Послушай, что происходит у компьютера, или включи музыку и управляй громкостью.</p></div>
+        <div class="feat reveal"><svg class="ic"><use href="#i-app"/></svg><h3 data-i="ft.7t">Программы и сценарии</h3><p data-i="ft.7p">Открывай программы и сайты, запускай свои сценарии одним касанием: «Рабочий день», «Кино».</p></div>
+        <div class="feat reveal"><svg class="ic"><use href="#i-power"/></svg><h3 data-i="ft.8t">Питание</h3><p data-i="ft.8p">Блокировка, сон, перезагрузка, выключение и таймер — плюс заряд батареи на виду.</p></div>
+        <div class="feat reveal"><svg class="ic"><use href="#i-rec"/></svg><h3 data-i="ft.9t">Запись экрана и камеры</h3><p data-i="ft.9p">Запиши экран или камеру в MP4 прямо с телефона — видео сохраняется на ноутбуке.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="how" style="padding-top:0">
+    <div class="wrap">
+      <div class="head reveal">
+        <div class="kicker" data-i="h.kicker">Как работает</div>
+        <h2 data-i="h.title">Три шага — и компьютер у тебя в кармане</h2>
+      </div>
+      <div class="steps">
+        <div class="step reveal"><h3 data-i="h.1t">Поставь PocketComp на ноутбук</h3><p data-i="h.1p">Небольшая программа запускается вместе с системой и тихо ждёт в фоне.</p></div>
+        <div class="step reveal"><h3 data-i="h.2t">Отсканируй QR-код телефоном</h3><p data-i="h.2p">Телефон получает личный ключ. Чужие устройства без ключа не войдут.</p></div>
+        <div class="step reveal"><h3 data-i="h.3t">Управляй откуда угодно</h3><p data-i="h.3p">Дома, в дороге, в другой стране — пульт работает через любой интернет.</p></div>
+      </div>
+      <div class="flow reveal">
+        <div><b data-i="h.phone">Телефон</b><span data-i="h.phoneS">пульт в браузере</span></div>
+        <div class="arrow">⇄</div>
+        <div><b data-i="h.tunnel">Зашифрованный канал</b><span data-i="h.tunnelS">частная сеть WireGuard, только ваши устройства</span></div>
+        <div class="arrow">⇄</div>
+        <div><b data-i="h.laptop">Ноутбук</b><span data-i="h.laptopS">сервер PocketComp</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="security" style="padding-top:0">
+    <div class="wrap sec">
+      <div>
+        <div class="head reveal" style="margin-bottom:28px">
+          <div class="kicker" data-i="s.kicker">Безопасность</div>
+          <h2 data-i="s.title">Твой экран видишь только ты</h2>
+          <p class="lead" data-i="s.lead">Изображение идёт с ноутбука прямо на телефон. Мы не храним и не видим ни кадра.</p>
+        </div>
+        <ul class="checks">
+          <li class="reveal"><svg class="ic"><use href="#i-check"/></svg><div><b data-i="s.1t">Личный ключ</b><span data-i="s.1p">Вход только с ключом; сменить его можно одной кнопкой — все старые телефоны отключатся.</span></div></li>
+          <li class="reveal"><svg class="ic"><use href="#i-check"/></svg><div><b data-i="s.2t">Защита от подбора</b><span data-i="s.2p">10 неверных попыток — адрес блокируется на 15 минут.</span></div></li>
+          <li class="reveal"><svg class="ic"><use href="#i-check"/></svg><div><b data-i="s.3t">Видно, когда кто-то подключён</b><span data-i="s.3p">На экране ноутбука горит индикатор удалённого доступа.</span></div></li>
+          <li class="reveal"><svg class="ic"><use href="#i-check"/></svg><div><b data-i="s.4t">Админ-панель</b><span data-i="s.4p">Кто подключался, кто пытался войти, что разрешено — всё на одной странице, только на самом ноутбуке.</span></div></li>
+        </ul>
+      </div>
+      <div class="admin reveal" aria-label="Админ-панель PocketComp" role="img">
+        <div class="row"><img src="icon-192.png" alt="" width="24" height="24" style="border-radius:6px"><b>PocketComp</b><span style="color:var(--mut)" data-i="a.admin">админ</span><span class="grow"></span><span class="dot"></span><span style="color:var(--mut)" data-i="a.on">работает</span></div>
+        <div class="tiles">
+          <div class="tile"><small data-i="a.up">Работает</small><b>6 ч 12 мин</b></div>
+          <div class="tile"><small data-i="a.watch">Сейчас смотрят</small><b>1</b></div>
+          <div class="tile"><small data-i="a.mem">Память</small><b>52 МБ</b></div>
+          <div class="tile"><small data-i="a.blocked">Заблокировано</small><b>0</b></div>
+        </div>
+        <div class="sw"><span data-i="a.f1">Управление с телефона</span><i></i></div>
+        <div class="sw"><span data-i="a.f2">Микрофон ноутбука</span><i></i></div>
+        <div class="sw"><span data-i="a.f3">Индикатор доступа</span><i></i></div>
+        <div class="sw"><span data-i="a.f4">Запись экрана</span><i class="off"></i></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="roadmap" style="padding-top:0">
+    <div class="wrap">
+      <div class="head reveal">
+        <div class="kicker" data-i="r.kicker">Дорожная карта</div>
+        <h2 data-i="r.title">Что уже работает и что дальше</h2>
+      </div>
+      <div class="road">
+        <div class="phase now reveal"><span class="tag" data-i="r.now">Работает сейчас</span><h3 data-i="r.1t">Личный пульт</h3>
+          <ul><li data-i="r.1a">Экран до 60 к/с, мышь, клавиатура</li><li data-i="r.1b">Файлы, буфер, камера, микрофон</li><li data-i="r.1c">Windows и macOS, iPhone и Android</li><li data-i="r.1d">Админ-панель и защита от подбора</li></ul></div>
+        <div class="phase reveal"><span class="tag" data-i="r.next">Следующий шаг</span><h3 data-i="r.2t">Установка в один клик</h3>
+          <ul><li data-i="r.2a">Установщик без настройки сети</li><li data-i="r.2b">Несколько компьютеров в одном пульте</li><li data-i="r.2c">Узбекский и английский интерфейс</li></ul></div>
+        <div class="phase reveal"><span class="tag" data-i="r.later">Дальше</span><h3 data-i="r.3t">Для команд и бизнеса</h3>
+          <ul><li data-i="r.3a">Доступ для коллег с правами</li><li data-i="r.3b">Поддержка компьютеров клиентов</li><li data-i="r.3c">Журнал действий для компании</li></ul></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="team" style="padding-top:0">
+    <div class="wrap">
+      <div class="head reveal">
+        <div class="kicker" data-i="t.kicker">Команда</div>
+        <h2 data-i="t.title">Делаем то, чем пользуемся сами</h2>
+        <p class="lead" data-i="t.lead">PocketComp вырос из нашей собственной задачи: управлять ноутбуком с айфона, когда его нет рядом.</p>
+      </div>
+      <div class="team" id="teamList"></div>
+    </div>
+  </section>
+
+  <section class="block" id="contact" style="padding-top:0">
+    <div class="wrap">
+      <div class="final reveal">
+        <h2 data-i="c.title">Попробуй PocketComp</h2>
+        <p class="lead" data-i="c.lead">Напиши нам — подключим твой компьютер и покажем, как всё работает.</p>
+        <div class="cta">
+          <a class="btn pri" id="contactBtn" href="#" target="_blank" rel="noopener"><svg class="ic"><use href="#i-tg"/></svg><span data-i="c.tg">Написать в Telegram</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span class="logo" style="font-size:16px"><img src="icon-192.png" alt="" width="24" height="24" style="width:24px;height:24px;border-radius:6px">PocketComp</span>
+    <span>© <span id="year"></span> PocketComp</span>
+    <span class="grow"></span>
+    <span data-i="foot.made">Сделано в Узбекистане</span>
+  </div>
+</footer>
+
+<script>
+/* ── Данные, которые заполняет команда ───────────────────────────── */
+const SITE = {
+  contact: "",                             // ссылка t.me/… для кнопки «Написать в Telegram» (пусто — кнопка ведёт на GitHub)
+  team: [                                  // имя, роль на трёх языках
+    { name: "Bahriddin Bahodurov", role: { ru: "CEO — продукт и развитие", uz: "CEO — mahsulot va rivojlanish", en: "CEO — product & growth" } },
+    { name: "Shohruh Raxmatilloyev", role: { ru: "CTO — технологии и разработка", uz: "CTO — texnologiya va dasturlash", en: "CTO — technology & engineering" } },
+  ],
+};
+
+const T = {
+  ru: {},   // русский — прямо в разметке
+  uz: {
+    "nav.features":"Imkoniyatlar","nav.how":"Qanday ishlaydi","nav.security":"Xavfsizlik","nav.team":"Jamoa","nav.cta":"Sinab ko‘rish",
+    "hero.kicker":"O‘z kompyuteringizga masofaviy kirish","hero.t1":"Kompyuteringiz —","hero.t2":"cho‘ntagingizda.",
+    "hero.lead":"Noutbukning ekrani, sichqonchasi, klaviaturasi, fayllari va kamerasi — telefoningizda, dunyoning istalgan joyidan. Kanal boshidan oxirigacha shifrlangan: tasvirni faqat siz ko‘rasiz.",
+    "hero.cta":"Kirish olish","hero.how":"Bu qanday ishlaydi","hero.b1":"App Store’siz — ilova kabi ochiladi","hero.b2":"Windows va macOS","hero.b3":"iPhone va Android",
+    "f.fps":"kadr/s","f.min":"daq","f.mb":"MB","f.1":"real vaqtdagi ekran, H.264 video","f.2":"kadr begona serverlarda saqlanadi: hammasi to‘g‘ri telefonga boradi","f.3":"telefonni ulash: QR-kodni skanerlash","f.4":"xotira — noutbukdagi server shuncha egallaydi",
+    "p.kicker":"Nima uchun","p.title":"Kompyuter uyda, lekin u hozir kerak",
+    "p.q1":"«Fayl noutbukda qolib ketdi»","p.a1":"Telefondan papkani oching va faylni oling — yoki telefondan noutbukka yuboring.",
+    "p.q2":"«O‘chirishni unutdim»","p.a2":"Qayerda bo‘lmang, kompyuterni bir bosishda bloklang, uxlatib qo‘ying yoki o‘chiring.",
+    "p.q3":"«Kompyuterda bir ish qilish kerak»","p.a3":"To‘liq ekran va boshqaruv: sichqoncha, klaviatura, dasturlar — xuddi uning oldida o‘tirgandek.",
+    "ft.kicker":"Imkoniyatlar","ft.title":"Noutbuk qila oladigan hamma narsa — telefoningizda","ft.lead":"O‘nlab ilovalar o‘rniga bitta pult. Telefon brauzerida ishlaydi va «Uy» ekraniga qo‘yiladi.",
+    "ft.1t":"Ekran va boshqaruv — 60 kadr/s gacha","ft.1p":"H.264 video yoki ekranning faqat o‘zgargan qismlari. Sifat aloqaga qarab o‘zi moslashadi — 3G dan Wi-Fi gacha. Telefonni burang — ekran butun displeyga.",
+    "ft.2t":"Sichqoncha va klaviatura","ft.2p":"Tachpad, o‘ng va ikki marta bosish, aylantirish, tezkor tugmalar: Alt+Tab, nusxa olish, qo‘yish.",
+    "ft.3t":"Fayllar u yoqqa-bu yoqqa","ft.3p":"Noutbukdan faylni oling yoki telefondan yuboring — rasm, hujjat, istalgan narsa.",
+    "ft.4t":"Umumiy bufer","ft.4p":"Telefonda nusxa oldingiz — kompyuterga qo‘ydingiz. Va aksincha.",
+    "ft.5t":"Noutbuk kamerasi","ft.5p":"Uyda nima bo‘layotganini ko‘ring: 720p, kameraning maksimal tezligida, rasm va yozuv.",
+    "ft.6t":"Mikrofon va ovoz","ft.6p":"Kompyuter yonida nima bo‘layotganini tinglang yoki musiqa qo‘yib, ovozni boshqaring.",
+    "ft.7t":"Dasturlar va ssenariylar","ft.7p":"Dastur va saytlarni oching, o‘z ssenariylaringizni bir bosishda ishga tushiring: «Ish kuni», «Kino».",
+    "ft.8t":"Quvvat","ft.8p":"Bloklash, uyqu, qayta yuklash, o‘chirish va taymer — batareya quvvati ham ko‘z oldingizda.",
+    "ft.9t":"Ekran va kamerani yozish","ft.9p":"Ekranni yoki kamerani telefondan MP4 ga yozing — video noutbukda saqlanadi.",
+    "h.kicker":"Qanday ishlaydi","h.title":"Uch qadam — va kompyuter cho‘ntagingizda",
+    "h.1t":"PocketComp’ni noutbukka o‘rnating","h.1p":"Kichik dastur tizim bilan birga ishga tushadi va fonda jimgina kutadi.",
+    "h.2t":"QR-kodni telefon bilan skanerlang","h.2p":"Telefon shaxsiy kalit oladi. Kalitsiz begona qurilmalar kira olmaydi.",
+    "h.3t":"Istalgan joydan boshqaring","h.3p":"Uyda, yo‘lda, boshqa davlatda — pult har qanday internet orqali ishlaydi.",
+    "h.phone":"Telefon","h.phoneS":"brauzerdagi pult","h.tunnel":"Shifrlangan kanal","h.tunnelS":"WireGuard xususiy tarmog‘i, faqat sizning qurilmalaringiz","h.laptop":"Noutbuk","h.laptopS":"PocketComp serveri",
+    "s.kicker":"Xavfsizlik","s.title":"Ekraningizni faqat siz ko‘rasiz","s.lead":"Tasvir noutbukdan to‘g‘ridan-to‘g‘ri telefonga boradi. Biz birorta kadrni ham saqlamaymiz va ko‘rmaymiz.",
+    "s.1t":"Shaxsiy kalit","s.1p":"Faqat kalit bilan kirish; uni bitta tugma bilan almashtirish mumkin — barcha eski telefonlar uziladi.",
+    "s.2t":"Taxmin qilishdan himoya","s.2p":"10 ta noto‘g‘ri urinish — manzil 15 daqiqaga bloklanadi.",
+    "s.3t":"Kim ulanganini ko‘rasiz","s.3p":"Noutbuk ekranida masofaviy kirish indikatori yonadi.",
+    "s.4t":"Admin panel","s.4p":"Kim ulangan, kim kirishga uringan, nimaga ruxsat berilgan — hammasi bitta sahifada, faqat noutbukning o‘zida.",
+    "a.admin":"admin","a.on":"ishlayapti","a.up":"Ishlayapti","a.watch":"Hozir ko‘rmoqda","a.mem":"Xotira","a.blocked":"Bloklangan",
+    "a.f1":"Telefondan boshqarish","a.f2":"Noutbuk mikrofoni","a.f3":"Kirish indikatori","a.f4":"Ekranni yozish",
+    "r.kicker":"Yo‘l xaritasi","r.title":"Nima ishlayapti va keyin nima","r.now":"Hozir ishlayapti","r.next":"Keyingi qadam","r.later":"Keyin",
+    "r.1t":"Shaxsiy pult","r.1a":"60 kadr/s gacha ekran, sichqoncha, klaviatura","r.1b":"Fayllar, bufer, kamera, mikrofon","r.1c":"Windows va macOS, iPhone va Android","r.1d":"Admin panel va himoya",
+    "r.2t":"Bir bosishda o‘rnatish","r.2a":"Tarmoqni sozlashsiz o‘rnatuvchi","r.2b":"Bitta pultda bir nechta kompyuter","r.2c":"O‘zbek va ingliz interfeysi",
+    "r.3t":"Jamoalar va biznes uchun","r.3a":"Hamkasblarga huquqlar bilan kirish","r.3b":"Mijozlar kompyuterini qo‘llab-quvvatlash","r.3c":"Kompaniya uchun harakatlar jurnali",
+    "t.kicker":"Jamoa","t.title":"O‘zimiz foydalanadigan narsani yaratamiz","t.lead":"PocketComp o‘zimizning vazifamizdan o‘sib chiqdi: noutbuk yonimizda bo‘lmaganda uni iPhone’dan boshqarish.",
+    "c.title":"PocketComp’ni sinab ko‘ring","c.lead":"Bizga yozing — kompyuteringizni ulab, hammasi qanday ishlashini ko‘rsatamiz.","c.tg":"Telegram’da yozish",
+    "foot.made":"O‘zbekistonda yaratilgan"
+  },
+  en: {
+    "nav.features":"Features","nav.how":"How it works","nav.security":"Security","nav.team":"Team","nav.cta":"Try it",
+    "hero.kicker":"Remote access to your own computer","hero.t1":"Your computer,","hero.t2":"in your pocket.",
+    "hero.lead":"Your laptop’s screen, mouse, keyboard, files and camera — on your phone, from anywhere. End-to-end encrypted: only you see the picture.",
+    "hero.cta":"Get access","hero.how":"How it works","hero.b1":"No App Store — opens like an app","hero.b2":"Windows and macOS","hero.b3":"iPhone and Android",
+    "f.fps":"fps","f.min":"min","f.mb":"MB","f.1":"live screen, H.264 video","f.2":"frames stored on anyone’s servers: it all goes straight to your phone","f.3":"to connect a phone: scan a QR code","f.4":"of memory used by the laptop server",
+    "p.kicker":"Why","p.title":"Your computer is at home. You need it now.",
+    "p.q1":"“The file is on my laptop”","p.a1":"Open the folder from your phone and grab the file — or send one from your phone to the laptop.",
+    "p.q2":"“I forgot to shut it down”","p.a2":"Lock, sleep or shut down your computer with one tap, wherever you are.",
+    "p.q3":"“I need to do something on my PC”","p.a3":"Full screen and control: mouse, keyboard, apps — as if you were sitting in front of it.",
+    "ft.kicker":"Features","ft.title":"Everything your laptop can do — on your phone","ft.lead":"One remote instead of a dozen apps. Runs in the phone’s browser and lives on the Home Screen.",
+    "ft.1t":"Screen and control up to 60 fps","ft.1p":"H.264 video or only the parts of the screen that changed. Quality adapts to the connection — from 3G to Wi-Fi. Rotate the phone for full screen.",
+    "ft.2t":"Mouse and keyboard","ft.2p":"Touchpad, right and double click, scrolling, shortcuts: Alt+Tab, copy, paste.",
+    "ft.3t":"Files both ways","ft.3p":"Grab a file from the laptop or send one from your phone — photos, documents, anything.",
+    "ft.4t":"Shared clipboard","ft.4p":"Copy on the phone — paste on the computer. And back.",
+    "ft.5t":"Laptop camera","ft.5p":"See what’s happening at home: 720p at the camera’s full frame rate, photos and recording.",
+    "ft.6t":"Microphone and sound","ft.6p":"Listen to what’s happening near the computer, or play music and control the volume.",
+    "ft.7t":"Apps and scenes","ft.7p":"Open apps and sites, run your own scenes with one tap: “Work day”, “Movie night”.",
+    "ft.8t":"Power","ft.8p":"Lock, sleep, restart, shut down and timers — with the battery level always in sight.",
+    "ft.9t":"Screen and camera recording","ft.9p":"Record the screen or camera to MP4 right from your phone — saved on the laptop.",
+    "h.kicker":"How it works","h.title":"Three steps — and your computer is in your pocket",
+    "h.1t":"Install PocketComp on the laptop","h.1p":"A small app starts with the system and quietly waits in the background.",
+    "h.2t":"Scan the QR code with your phone","h.2p":"The phone gets a personal key. Devices without the key can’t get in.",
+    "h.3t":"Control it from anywhere","h.3p":"At home, on the road, in another country — the remote works over any internet.",
+    "h.phone":"Phone","h.phoneS":"remote in the browser","h.tunnel":"Encrypted channel","h.tunnelS":"private WireGuard network, your devices only","h.laptop":"Laptop","h.laptopS":"PocketComp server",
+    "s.kicker":"Security","s.title":"Only you see your screen","s.lead":"The picture goes from the laptop straight to your phone. We never store or see a single frame.",
+    "s.1t":"Personal key","s.1p":"Sign in only with your key; change it with one button and every old phone is disconnected.",
+    "s.2t":"Brute-force protection","s.2p":"10 wrong attempts — the address is blocked for 15 minutes.",
+    "s.3t":"You see when someone is connected","s.3p":"A remote-access indicator lights up on the laptop screen.",
+    "s.4t":"Admin panel","s.4p":"Who connected, who tried to get in, what is allowed — all on one page, only on the laptop itself.",
+    "a.admin":"admin","a.on":"running","a.up":"Uptime","a.watch":"Watching now","a.mem":"Memory","a.blocked":"Blocked",
+    "a.f1":"Control from phone","a.f2":"Laptop microphone","a.f3":"Access indicator","a.f4":"Screen recording",
+    "r.kicker":"Roadmap","r.title":"What works today and what’s next","r.now":"Works today","r.next":"Next step","r.later":"Later",
+    "r.1t":"Personal remote","r.1a":"Screen up to 60 fps, mouse, keyboard","r.1b":"Files, clipboard, camera, microphone","r.1c":"Windows and macOS, iPhone and Android","r.1d":"Admin panel and brute-force protection",
+    "r.2t":"One-click setup","r.2a":"Installer with no network setup","r.2b":"Several computers in one remote","r.2c":"Uzbek and English interface",
+    "r.3t":"For teams and business","r.3a":"Access for colleagues with permissions","r.3b":"Support for customers’ computers","r.3c":"Company-wide activity log",
+    "t.kicker":"Team","t.title":"We build what we use ourselves","t.lead":"PocketComp grew out of our own problem: controlling a laptop from an iPhone when it isn’t nearby.",
+    "c.title":"Try PocketComp","c.lead":"Message us — we’ll connect your computer and show you how everything works.","c.tg":"Message on Telegram",
+    "foot.made":"Made in Uzbekistan"
+  }
+};
+
+T.ru["c.gh"]="Проект на GitHub";T.uz["c.gh"]="Loyiha GitHub’da";T.en["c.gh"]="Project on GitHub";
+const nodes=[...document.querySelectorAll('[data-i]')];
+nodes.forEach(n=>{if(!T.ru[n.dataset.i])T.ru[n.dataset.i]=n.textContent;});
+function setLang(lang){
+  if(!T[lang])lang='ru';
+  nodes.forEach(n=>{const v=T[lang][n.dataset.i];if(v)n.textContent=v;});
+  document.documentElement.lang=lang;
+  document.title={ru:'PocketComp — твой компьютер в кармане',uz:'PocketComp — kompyuteringiz cho‘ntagingizda',en:'PocketComp — your computer in your pocket'}[lang];
+  document.querySelectorAll('[data-lang]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.lang===lang));
+  renderTeam(lang);
+  try{localStorage.setItem('pc-lang',lang);}catch(e){}
+}
+function renderTeam(lang){
+  const list=document.getElementById('teamList');list.textContent='';
+  SITE.team.forEach(m=>{
+    const el=document.createElement('div');el.className='member';
+    const ava=document.createElement('div');ava.className='ava';ava.textContent=(m.name||'?').trim()[0].toUpperCase();
+    const box=document.createElement('div');const b=document.createElement('b');b.textContent=m.name;
+    const s=document.createElement('span');s.textContent=(m.role&&(m.role[lang]||m.role.ru))||'';
+    box.append(b,s);el.append(ava,box);list.append(el);
+  });
+}
+document.querySelectorAll('[data-lang]').forEach(b=>b.onclick=()=>setLang(b.dataset.lang));
+const cbtn=document.getElementById('contactBtn');
+if(SITE.contact){cbtn.href=SITE.contact;}
+else{cbtn.href='https://github.com/Shoxiazam/pocketcomp';cbtn.querySelector('use').setAttribute('href','#i-arrow');
+  cbtn.querySelector('[data-i]').dataset.i='c.gh';}
+document.getElementById('year').textContent=new Date().getFullYear();
+let saved='';try{saved=localStorage.getItem('pc-lang')||'';}catch(e){}
+const guess=(navigator.language||'').slice(0,2);
+setLang(saved||(guess==='uz'?'uz':guess==='en'?'en':'ru'));
+
+/* появление блоков при прокрутке: только сдвиг, без невидимого начального состояния */
+if('IntersectionObserver' in window){
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}}),{rootMargin:'0px 0px -8% 0px'});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+}else document.querySelectorAll('.reveal').forEach(el=>el.classList.add('in'));
+</script>
+</body>
+</html>
