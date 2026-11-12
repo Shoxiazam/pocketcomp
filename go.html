@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="referrer" content="no-referrer">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="PocketComp">
+<meta name="theme-color" content="#0b0d0f">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon.png">
+<title>PocketComp</title>
+<style>
+  :root{--bg:#0b0d0f;--card:#14171a;--line:#30373d;--txt:#eceff1;--mut:#8d959d;--mint:#62e6b0;--ink:#062018}
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0}
+  body{display:grid;place-items:center;padding:24px;background:radial-gradient(70% 50% at 100% 0%,rgba(98,230,176,.12),transparent 70%),var(--bg);
+    color:var(--txt);font:400 16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;text-align:center}
+  main{max-width:360px}
+  img{width:72px;height:72px;border-radius:18px;margin-bottom:22px}
+  h1{font-size:24px;letter-spacing:-.02em;margin:0 0 10px;font-weight:650}
+  p{margin:0;color:var(--mut)}
+  .spin{width:28px;height:28px;margin:26px auto 0;border-radius:50%;border:3px solid var(--line);border-top-color:var(--mint);animation:s 1s linear infinite}
+  @keyframes s{to{transform:rotate(360deg)}}
+  button{margin-top:26px;font:600 16px/1 inherit;color:var(--ink);background:var(--mint);border:0;border-radius:12px;padding:15px 24px;cursor:pointer;min-height:48px}
+  button:focus-visible{outline:2px solid #fff;outline-offset:3px}
+  .hidden{display:none}
+  @media (prefers-reduced-motion:reduce){.spin{animation-duration:3s}}
+</style>
+</head>
+<body>
+<main>
+  <img src="icon.png" alt="" width="72" height="72">
+  <h1 id="title">PocketComp</h1>
+  <p id="text" role="status" aria-live="polite"></p>
+  <div class="spin" id="spin"></div>
+  <button id="retry" class="hidden"></button>
+</main>
+<script>
+/* Постоянная ссылка PocketComp. Адрес ноутбука меняется при каждом запуске — эта страница находит текущий:
+   читает его из «почтового ящика» (ntfy), проверяет подпись ключом и открывает пульт. Ключ живёт только в части
+   адреса после # (на серверы она не отправляется) и в памяти этого телефона. */
+const L={
+  en:{find:"Looking for your laptop…",open:"Connecting…",off:"Your laptop is offline. Turn it on and make sure PocketComp is running.",
+      nolink:"Scan the QR code on your laptop to connect this phone.",net:"No internet connection. Check it and try again.",retry:"Try again"},
+  ru:{find:"Ищу твой ноутбук…",open:"Подключаюсь…",off:"Ноутбук не в сети. Включи его и проверь, что PocketComp запущен.",
+      nolink:"Отсканируй QR-код на ноутбуке, чтобы подключить этот телефон.",net:"Нет интернета. Проверь связь и попробуй ещё раз.",retry:"Попробовать ещё раз"},
+  uz:{find:"Noutbukingiz qidirilmoqda…",open:"Ulanmoqda…",off:"Noutbuk tarmoqda emas. Uni yoqing va PocketComp ishlayotganini tekshiring.",
+      nolink:"Bu telefonni ulash uchun noutbukdagi QR-kodni skanerlang.",net:"Internet yo‘q. Aloqani tekshirib, qayta urinib ko‘ring.",retry:"Qayta urinish"}
+};
+const lang=(navigator.language||'en').slice(0,2),t=L[lang]||L.en;
+document.documentElement.lang=L[lang]?lang:'en';
+const $=id=>document.getElementById(id);
+$('retry').textContent=t.retry;$('retry').onclick=()=>go();
+function show(msg,busy){$('text').textContent=msg;$('spin').classList.toggle('hidden',!busy);$('retry').classList.toggle('hidden',busy||msg===t.nolink);}
+
+const HOST=/^https:\/\/[a-z0-9-]+\.trycloudflare\.com$/;
+function creds(){
+  const r=(location.hash.match(/[#&]r=(pc-[0-9a-f]{32})/)||[])[1],k=(location.hash.match(/[#&]k=([A-Za-z0-9-]{8,40})/)||[])[1];
+  if(r&&k){try{localStorage.setItem('pc-rv',JSON.stringify({r,k}));}catch(e){}return{r,k};}
+  try{const s=JSON.parse(localStorage.getItem('pc-rv')||'null');if(s&&s.r&&s.k)return s;}catch(e){}
+  return null;
+}
+async function signed(k,url,sig){
+  const enc=new TextEncoder(),key=await crypto.subtle.importKey('raw',enc.encode(k.toUpperCase()),{name:'HMAC',hash:'SHA-256'},false,['sign']);
+  const mac=new Uint8Array(await crypto.subtle.sign('HMAC',key,enc.encode(url)));
+  return [...mac].map(b=>b.toString(16).padStart(2,'0')).join('')===sig;
+}
+async function alive(url){
+  try{const c=new AbortController();setTimeout(()=>c.abort(),8000);
+    const r=await fetch(url+'/api/hello',{signal:c.signal,cache:'no-store'});return r.ok&&(await r.json()).brand==='PocketComp';}catch(e){return false;}
+}
+async function go(){
+  const c=creds();
+  if(!c){show(t.nolink,false);return;}
+  show(t.find,true);
+  let lines;
+  try{const r=await fetch(`https://ntfy.sh/${c.r}/json?poll=1&since=12h`,{cache:'no-store'});
+    if(!r.ok)throw 0;lines=(await r.text()).trim().split('\n').filter(Boolean);}
+  catch(e){show(t.net,false);return;}
+  for(const line of lines.reverse()){                    // от самого свежего адреса к старым
+    let m;try{m=JSON.parse(JSON.parse(line).message);}catch(e){continue;}
+    if(!m||typeof m.u!=='string'||!HOST.test(m.u)||!(await signed(c.k,m.u,String(m.s))))continue;
+    show(t.open,true);
+    if(await alive(m.u)){location.replace(m.u+'/#k='+c.k);return;}
+    break;                                               // свежий адрес не отвечает — ноутбук выключен
+  }
+  show(t.off,false);
+}
+go();
+</script>
+</body>
+</html>
