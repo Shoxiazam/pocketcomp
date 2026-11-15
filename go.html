@@ -14,56 +14,116 @@
 <link rel="apple-touch-icon" href="icon.png">
 <title>PocketComp</title>
 <style>
-  :root{--bg:#0b0d0f;--card:#14171a;--line:#30373d;--txt:#eceff1;--mut:#8d959d;--mint:#62e6b0;--ink:#062018}
+  :root{--bg:#0b0d0f;--card:#14171a;--card2:#1a1e22;--line:#30373d;--txt:#eceff1;--mut:#8d959d;--mint:#62e6b0;--red:#ff6b6b;--ink:#062018}
   *{box-sizing:border-box}
-  html,body{height:100%;margin:0}
-  body{display:grid;place-items:center;padding:24px;background:radial-gradient(70% 50% at 100% 0%,rgba(98,230,176,.12),transparent 70%),var(--bg);
-    color:var(--txt);font:400 16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;text-align:center}
-  main{max-width:360px}
-  img{width:72px;height:72px;border-radius:18px;margin-bottom:22px}
-  h1{font-size:24px;letter-spacing:-.02em;margin:0 0 10px;font-weight:650}
+  html,body{min-height:100%;margin:0}
+  body{background:radial-gradient(70% 50% at 100% 0%,rgba(98,230,176,.12),transparent 70%),var(--bg);color:var(--txt);
+    font:400 16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
+    padding:calc(env(safe-area-inset-top) + 28px) 18px calc(env(safe-area-inset-bottom) + 28px)}
+  main{max-width:440px;margin:0 auto}
+  .center{text-align:center;margin-top:12vh}
+  img.logo{width:64px;height:64px;border-radius:16px;margin-bottom:18px}
+  h1{font-size:24px;letter-spacing:-.02em;margin:0 0 8px;font-weight:650}
   p{margin:0;color:var(--mut)}
-  .spin{width:28px;height:28px;margin:26px auto 0;border-radius:50%;border:3px solid var(--line);border-top-color:var(--mint);animation:s 1s linear infinite}
+  .spin{width:26px;height:26px;margin:24px auto 0;border-radius:50%;border:3px solid var(--line);border-top-color:var(--mint);animation:s 1s linear infinite}
   @keyframes s{to{transform:rotate(360deg)}}
-  button{margin-top:26px;font:600 16px/1 inherit;color:var(--ink);background:var(--mint);border:0;border-radius:12px;padding:15px 24px;cursor:pointer;min-height:48px}
-  button:focus-visible{outline:2px solid #fff;outline-offset:3px}
-  .hidden{display:none}
-  @media (prefers-reduced-motion:reduce){.spin{animation-duration:3s}}
+  button{font:inherit;cursor:pointer}
+  .btn{margin-top:22px;font-weight:600;color:var(--ink);background:var(--mint);border:0;border-radius:12px;padding:14px 22px;min-height:48px}
+  :focus-visible{outline:2px solid #fff;outline-offset:3px}
+  .hidden{display:none!important}
+  .top{display:flex;align-items:center;gap:12px;margin-bottom:22px}
+  .top img{width:40px;height:40px;border-radius:10px}
+  .top h1{margin:0;font-size:22px}
+  .list{display:grid;gap:10px}
+  .pc{display:flex;align-items:center;border-radius:16px;background:var(--card);border:1px solid #242a2f;transition:border-color .2s,background .2s}
+  .pc:hover{border-color:var(--line);background:var(--card2)}
+  .pc .main{flex:1;min-width:0;display:flex;align-items:center;gap:12px;text-align:left;padding:16px;background:none;border:0;color:var(--txt);
+    min-height:64px;border-radius:16px}
+  .pc .dot{width:9px;height:9px;border-radius:50%;background:var(--line);flex:none}
+  .pc .dot.on{background:var(--mint);box-shadow:0 0 10px var(--mint)}
+  .pc .dot.off{background:var(--red)}
+  .pc b{display:block;font-weight:600}
+  .pc small{color:var(--mut);font-size:13px}
+  .pc .grow{flex:1;min-width:0}
+  .pc .x{background:none;border:0;color:var(--mut);font-size:22px;margin-right:8px;border-radius:10px;min-width:44px;min-height:44px}
+  .pc .x:hover{color:var(--txt);background:#22282d}
+  .hint{margin-top:18px;font-size:14px}
+  .toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 20px);transform:translateX(-50%);background:#252d34;
+    padding:10px 16px;border-radius:12px;font-size:14px;opacity:0;transition:opacity .2s}
+  .toast.on{opacity:1}
+  @media (prefers-reduced-motion:reduce){.spin{animation-duration:3s}.toast{transition:none}}
 </style>
 </head>
 <body>
 <main>
-  <img src="icon.png" alt="" width="72" height="72">
-  <h1 id="title">PocketComp</h1>
-  <p id="text" role="status" aria-live="polite"></p>
-  <div class="spin" id="spin"></div>
-  <button id="retry" class="hidden"></button>
+  <section class="center" id="one">
+    <img class="logo" src="icon.png" alt="" width="64" height="64">
+    <h1 id="oneT">PocketComp</h1>
+    <p id="text" role="status" aria-live="polite"></p>
+    <div class="spin" id="spin"></div>
+    <button class="btn hidden" id="retry"></button>
+    <button class="btn hidden" id="toList" style="background:#252d34;color:var(--txt)"></button>
+  </section>
+  <section class="hidden" id="many">
+    <div class="top"><img src="icon-192.png" alt=""><h1 id="listT"></h1></div>
+    <div class="list" id="list"></div>
+    <p class="hint" id="listHint"></p>
+  </section>
 </main>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script>
-/* Постоянная ссылка PocketComp. Адрес ноутбука меняется при каждом запуске — эта страница находит текущий:
-   читает его из «почтового ящика» (ntfy), проверяет подпись ключом и открывает пульт. Ключ живёт только в части
-   адреса после # (на серверы она не отправляется) и в памяти этого телефона. */
+/* PocketComp: постоянная ссылка и список «Мои компьютеры».
+   Ключи живут только в части адреса после # (на серверы она не уходит) и в памяти этого телефона.
+   Компьютер через туннель (r): текущий адрес берётся из ntfy и проверяется подписью ключом.
+   Компьютер с прямым адресом (u): например, через Tailscale. */
 const L={
-  en:{find:"Looking for your laptop…",open:"Connecting…",off:"Your laptop is offline. Turn it on and make sure PocketComp is running.",
-      nolink:"Scan the QR code on your laptop to connect this phone.",net:"No internet connection. Check it and try again.",retry:"Try again"},
-  ru:{find:"Ищу твой ноутбук…",open:"Подключаюсь…",off:"Ноутбук не в сети. Включи его и проверь, что PocketComp запущен.",
-      nolink:"Отсканируй QR-код на ноутбуке, чтобы подключить этот телефон.",net:"Нет интернета. Проверь связь и попробуй ещё раз.",retry:"Попробовать ещё раз"},
-  uz:{find:"Noutbukingiz qidirilmoqda…",open:"Ulanmoqda…",off:"Noutbuk tarmoqda emas. Uni yoqing va PocketComp ishlayotganini tekshiring.",
-      nolink:"Bu telefonni ulash uchun noutbukdagi QR-kodni skanerlang.",net:"Internet yo‘q. Aloqani tekshirib, qayta urinib ko‘ring.",retry:"Qayta urinish"}
+  en:{find:"Looking for your laptop…",open:"Connecting…",off:"This laptop is offline. Turn it on and make sure PocketComp is running.",
+      nolink:"Scan the QR code on your laptop to connect this phone.",net:"No internet connection. Check it and try again.",retry:"Try again",
+      list:"My computers",hint:"To add another computer, scan the QR code on it or tap the computers button in its remote.",
+      added:"Computer added",removed:"Removed",remove:"Remove",confirm:"Remove this computer from the list?",online:"online",offline:"offline",
+      checking:"checking…",unknown:"tap to open",all:"All computers"},
+  ru:{find:"Ищу твой ноутбук…",open:"Подключаюсь…",off:"Этот ноутбук не в сети. Включи его и проверь, что PocketComp запущен.",
+      nolink:"Отсканируй QR-код на ноутбуке, чтобы подключить этот телефон.",net:"Нет интернета. Проверь связь и попробуй ещё раз.",retry:"Попробовать ещё раз",
+      list:"Мои компьютеры",hint:"Чтобы добавить ещё компьютер, отсканируй QR-код на нём или нажми кнопку компьютеров в его пульте.",
+      added:"Компьютер добавлен",removed:"Удалён",remove:"Удалить",confirm:"Убрать этот компьютер из списка?",online:"в сети",offline:"не в сети",
+      checking:"проверяю…",unknown:"нажми, чтобы открыть",all:"Все компьютеры"},
+  uz:{find:"Noutbukingiz qidirilmoqda…",open:"Ulanmoqda…",off:"Bu noutbuk tarmoqda emas. Uni yoqing va PocketComp ishlayotganini tekshiring.",
+      nolink:"Bu telefonni ulash uchun noutbukdagi QR-kodni skanerlang.",net:"Internet yo‘q. Aloqani tekshirib, qayta urinib ko‘ring.",retry:"Qayta urinish",
+      list:"Mening kompyuterlarim",hint:"Yana kompyuter qo‘shish uchun undagi QR-kodni skanerlang yoki uning pultidagi kompyuterlar tugmasini bosing.",
+      added:"Kompyuter qo‘shildi",removed:"O‘chirildi",remove:"O‘chirish",confirm:"Bu kompyuterni ro‘yxatdan olib tashlaysizmi?",online:"tarmoqda",offline:"tarmoqda emas",
+      checking:"tekshirilmoqda…",unknown:"ochish uchun bosing",all:"Barcha kompyuterlar"}
 };
 const lang=(navigator.language||'en').slice(0,2),t=L[lang]||L.en;
 document.documentElement.lang=L[lang]?lang:'en';
 const $=id=>document.getElementById(id);
-$('retry').textContent=t.retry;$('retry').onclick=()=>go();
-function show(msg,busy){$('text').textContent=msg;$('spin').classList.toggle('hidden',!busy);$('retry').classList.toggle('hidden',busy||msg===t.nolink);}
-
 const HOST=/^https:\/\/[a-z0-9-]+\.trycloudflare\.com$/;
-function creds(){
-  const r=(location.hash.match(/[#&]r=(pc-[0-9a-f]{32})/)||[])[1],k=(location.hash.match(/[#&]k=([A-Za-z0-9-]{8,40})/)||[])[1];
-  if(r&&k){try{localStorage.setItem('pc-rv',JSON.stringify({r,k}));}catch(e){}return{r,k};}
-  try{const s=JSON.parse(localStorage.getItem('pc-rv')||'null');if(s&&s.r&&s.k)return s;}catch(e){}
+const KEY=/^[A-Za-z0-9-]{8,40}$/,TOPIC=/^pc-[0-9a-f]{32}$/;
+
+function toast(m){const e=$('toast');e.textContent=m;e.classList.add('on');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('on'),2200);}
+const b64e=o=>btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+const b64d=s=>JSON.parse(decodeURIComponent(escape(atob(s.replace(/-/g,'+').replace(/_/g,'/')))));
+
+/* ── список ── */
+function clean(e){
+  if(!e||!KEY.test(e.k||''))return null;
+  const n=String(e.n||'').slice(0,40)||'PocketComp';
+  if(e.r&&TOPIC.test(e.r))return{n,k:e.k,r:e.r};
+  try{const u=new URL(e.u);if(/^https?:$/.test(u.protocol)&&!u.username&&!u.password)return{n,k:e.k,u:u.origin};}catch(_){}
   return null;
 }
+const same=(a,b)=>(a.r&&a.r===b.r)||(a.u&&a.u===b.u);
+function load(){let a=[];try{a=JSON.parse(localStorage.getItem('pc-list')||'[]');}catch(e){}
+  try{const old=JSON.parse(localStorage.getItem('pc-rv')||'null');if(old)a.push({n:'PocketComp',...old});}catch(e){}
+  return a.map(clean).filter(Boolean);}
+let list=load();
+function upsert(e){e=clean(e);if(!e)return null;const i=list.findIndex(x=>same(x,e));if(i>=0)list[i]={...list[i],...e};else list.push(e);return e;}
+function save(){
+  try{localStorage.setItem('pc-list',JSON.stringify(list));localStorage.removeItem('pc-rv');}catch(e){}
+  // список и в адресе: иконка «На экран “Домой”» откроется уже со всеми компьютерами (у неё своя память)
+  history.replaceState(null,'',location.pathname+(list.length?'#list='+b64e(list):''));
+}
+
+/* ── связь ── */
 async function signed(k,url,sig){
   const enc=new TextEncoder(),key=await crypto.subtle.importKey('raw',enc.encode(k.toUpperCase()),{name:'HMAC',hash:'SHA-256'},false,['sign']);
   const mac=new Uint8Array(await crypto.subtle.sign('HMAC',key,enc.encode(url)));
@@ -73,24 +133,69 @@ async function alive(url){
   try{const c=new AbortController();setTimeout(()=>c.abort(),8000);
     const r=await fetch(url+'/api/hello',{signal:c.signal,cache:'no-store'});return r.ok&&(await r.json()).brand==='PocketComp';}catch(e){return false;}
 }
-async function go(){
-  const c=creds();
-  if(!c){show(t.nolink,false);return;}
-  show(t.find,true);
+async function resolve(e){             // → {url} | {off:true} | {net:true}
+  if(e.u){if(location.protocol==='https:'&&e.u.startsWith('http:'))return{url:e.u,unknown:true};   // http отсюда не проверить
+    return (await alive(e.u))?{url:e.u}:{off:true};}
   let lines;
-  try{const r=await fetch(`https://ntfy.sh/${c.r}/json?poll=1&since=12h`,{cache:'no-store'});
-    if(!r.ok)throw 0;lines=(await r.text()).trim().split('\n').filter(Boolean);}
-  catch(e){show(t.net,false);return;}
-  for(const line of lines.reverse()){                    // от самого свежего адреса к старым
-    let m;try{m=JSON.parse(JSON.parse(line).message);}catch(e){continue;}
-    if(!m||typeof m.u!=='string'||!HOST.test(m.u)||!(await signed(c.k,m.u,String(m.s))))continue;
-    show(t.open,true);
-    if(await alive(m.u)){location.replace(m.u+'/#k='+c.k);return;}
-    break;                                               // свежий адрес не отвечает — ноутбук выключен
+  try{const r=await fetch(`https://ntfy.sh/${e.r}/json?poll=1&since=12h`,{cache:'no-store'});if(!r.ok)throw 0;
+    lines=(await r.text()).trim().split('\n').filter(Boolean);}catch(_){return{net:true};}
+  for(const line of lines.reverse()){
+    let m;try{m=JSON.parse(JSON.parse(line).message);}catch(_){continue;}
+    if(!m||typeof m.u!=='string'||!HOST.test(m.u)||!(await signed(e.k,m.u,String(m.s))))continue;
+    return (await alive(m.u))?{url:m.u}:{off:true};
   }
-  show(t.off,false);
+  return{off:true};
 }
-go();
+
+/* ── экраны ── */
+function one(msg,busy,canRetry,e){
+  $('many').classList.add('hidden');$('one').classList.remove('hidden');
+  $('oneT').textContent=e?e.n:'PocketComp';$('text').textContent=msg;
+  $('spin').classList.toggle('hidden',!busy);
+  $('retry').classList.toggle('hidden',!canRetry);$('retry').textContent=t.retry;$('retry').onclick=()=>connect(e);
+  $('toList').classList.toggle('hidden',busy||list.length<2);$('toList').textContent=t.all;$('toList').onclick=showList;
+}
+async function connect(e){
+  one(t.find,true,false,e);
+  const res=await resolve(e);
+  if(res.url){one(t.open,true,false,e);location.href=res.url+'/#k='+e.k;return;}
+  one(res.net?t.net:t.off,false,true,e);
+}
+function showList(){
+  $('one').classList.add('hidden');$('many').classList.remove('hidden');
+  $('listT').textContent=t.list;$('listHint').textContent=t.hint;
+  const box=$('list');box.textContent='';
+  list.forEach((e,i)=>{
+    const row=document.createElement('div');row.className='pc';
+    row.innerHTML='<button class="main" type="button"><span class="dot"></span><span class="grow"><b></b><small></small></span></button><button class="x" type="button">×</button>';
+    row.querySelector('b').textContent=e.n;row.querySelector('small').textContent=t.checking;
+    row.querySelector('.x').setAttribute('aria-label',t.remove+': '+e.n);
+    row.querySelector('.main').onclick=()=>connect(e);
+    row.querySelector('.x').onclick=()=>{if(confirm(t.confirm)){list.splice(i,1);save();toast(t.removed);list.length?showList():one(t.nolink,false,false);}};
+    box.append(row);
+    resolve(e).then(res=>{const d=row.querySelector('.dot'),s=row.querySelector('small');
+      if(res.unknown){s.textContent=t.unknown;}
+      else if(res.url){d.classList.add('on');s.textContent=t.online;}
+      else{d.classList.add('off');s.textContent=res.net?t.net:t.offline;}});
+  });
+}
+
+/* ── вход ── */
+(function(){
+  const h=location.hash;let fresh=null,added=false;
+  const lm=h.match(/[#&]list=([A-Za-z0-9_-]+)/);
+  if(lm){try{b64d(lm[1]).forEach(upsert);}catch(e){}}
+  const am=h.match(/[#&]add=([A-Za-z0-9_\-+/]+)/);
+  if(am){try{added=!!upsert(b64d(am[1]));}catch(e){}}
+  const r=(h.match(/[#&]r=(pc-[0-9a-f]{32})/)||[])[1],k=(h.match(/[#&]k=([A-Za-z0-9-]{8,40})/)||[])[1];
+  if(r&&k){const n=decodeURIComponent((h.match(/[#&]n=([^&]+)/)||[])[1]||'');fresh=upsert({r,k,n});}
+  save();
+  if(fresh){connect(fresh);return;}                       // только что отсканировали QR — сразу к этому ноутбуку
+  if(added){toast(t.added);showList();return;}
+  if(!list.length){one(t.nolink,false,false);return;}
+  if(list.length===1){connect(list[0]);return;}
+  showList();
+})();
 </script>
 </body>
 </html>
