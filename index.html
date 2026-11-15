@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>PocketComp — Your laptop in your pocket</title>
-<meta name="description" content="Control your laptop from your phone: live screen up to 60 fps, camera, mic, mouse, keyboard and power — over your own private network.">
+<meta name="description" content="Control your laptop from your phone, from any network: live screen up to 60 fps, camera, mic, mouse, keyboard and power. Nothing to install on the phone.">
 <meta name="theme-color" content="#0b0d0f">
 <meta property="og:title" content="PocketComp — Your laptop in your pocket">
-<meta property="og:description" content="Live screen up to 60 fps, camera, mic and lock — from your phone. Your screen never touches our servers.">
+<meta property="og:description" content="Live screen up to 60 fps, camera, files and lock — from your phone, from any network. Encrypted on the way, never stored.">
 <meta property="og:image" content="https://shoxiazam.github.io/pocketcomp/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -213,12 +213,12 @@
   .pipe i:nth-child(2){animation-delay:-.9s;background:var(--cyan);box-shadow:0 0 12px var(--cyan);animation-direction:reverse}
   .pipe i:nth-child(3){animation-delay:-1.7s}
   @keyframes flow{from{left:-4%}to{left:104%}}
-  .steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(14px,2vw,24px);margin-top:clamp(28px,4vw,44px);counter-reset:s}
+  .steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(14px,2vw,24px);margin-top:clamp(28px,4vw,44px);counter-reset:s}
   @media (max-width:900px){.steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
   @media (max-width:520px){.steps{grid-template-columns:minmax(0,1fr)}}
   .step{counter-increment:s;border-left:2px solid var(--line2);padding:4px 0 4px 18px}
   .step::before{content:counter(s,decimal-leading-zero);display:block;font:500 13px/1 var(--mono);color:var(--mint);margin-bottom:12px}
-  .step:nth-child(4)::before{color:var(--cyan)}
+  .step:nth-child(3)::before{color:var(--cyan)}
   .step:hover{border-color:var(--mint)}
   .step p{color:var(--mut);margin-top:6px;font-size:15px}
 
@@ -419,9 +419,9 @@
   <section class="hero">
     <div class="wrap split">
       <div>
-        <a class="new" href="#roadmap"><span data-i="hero.new">New in v3.42: live screen up to 60 fps</span><b>3.42</b></a>
+        <a class="new" href="#roadmap"><span data-i="hero.new">New in v3.43: works from any network, no Tailscale</span><b>3.43</b></a>
         <h1><span data-i="hero.t1">Leave the laptop.</span><span class="grad" data-i="hero.t2">Keep the control.</span></h1>
-        <p class="lead" data-i="hero.lead">PocketComp turns your phone into a remote for your laptop — screen, camera, mic, mouse and power — over your own private network. Your screen never touches our servers.</p>
+        <p class="lead" data-i="hero.lead">PocketComp turns your phone into a remote for your laptop — screen, camera, mic, mouse and power — from any network. Nothing to install on the phone. Encrypted on the way, never stored.</p>
         <div class="cta">
           <a class="btn go" href="#download"><svg class="ic" style="width:18px;height:18px"><use href="#i-down"/></svg><span data-i="hero.cta">Download for Windows</span></a>
           <a class="btn" href="#features" data-i="hero.tour">Take the tour</a>
@@ -519,18 +519,17 @@
     <div class="wrap">
       <div class="intro reveal">
         <div class="tag"><i></i><span data-i="c.tag">How it connects</span></div>
-        <h2 data-i="c.title">A straight line from your phone to your laptop.</h2>
-        <p data-i="c.lead">PocketComp runs on your laptop and talks to your phone over your own private network. No account with us, no cloud copy of your screen.</p>
+        <h2 data-i="c.title">Install. Scan. Done.</h2>
+        <p data-i="c.lead">PocketComp keeps one encrypted connection from your laptop to the PocketComp relay. Your phone reaches the laptop through it from any network — no accounts, no extra apps, nothing stored.</p>
       </div>
       <div class="wire reveal">
         <div class="node"><div class="box"><svg class="ic"><use href="#i-phone"/></svg></div><span data-i="c.phone">your phone</span></div>
-        <div class="pipe"><i></i><i></i><i></i><span data-i="c.pipe">encrypted · private network</span></div>
+        <div class="pipe"><i></i><i></i><i></i><span data-i="c.pipe">encrypted · PocketComp relay</span></div>
         <div class="node"><div class="box"><svg class="ic"><use href="#i-laptop"/></svg></div><span data-i="c.laptop">your laptop</span></div>
       </div>
       <div class="steps">
-        <div class="step reveal"><h3 data-i="c.1t">Install</h3><p data-i="c.1p">Run the installer on your Windows or Mac laptop. It starts on its own.</p></div>
-        <div class="step reveal"><h3 data-i="c.2t">Sign in</h3><p data-i="c.2p">Join your free Tailscale network on the laptop and the phone.</p></div>
-        <div class="step reveal"><h3 data-i="c.3t">Scan the QR</h3><p data-i="c.3p">Scan the code on the laptop to pair your phone.</p></div>
+        <div class="step reveal"><h3 data-i="c.1t">Install</h3><p data-i="c.1p">Run the installer on your Windows laptop. It starts with Windows by itself.</p></div>
+        <div class="step reveal"><h3 data-i="c.3t">Scan the QR</h3><p data-i="c.3p">The QR code opens on the laptop right after setup. Point the phone camera at it.</p></div>
         <div class="step reveal"><h3 data-i="c.4t">Control</h3><p data-i="c.4p">Screen, camera, mouse, keyboard and power — ready.</p></div>
       </div>
     </div>
@@ -540,7 +539,7 @@
   <div class="band">
     <div class="wrap">
       <div class="big reveal"><b class="grad">60 fps</b><span data-i="n.1">live screen on a good connection</span></div>
-      <div class="big reveal"><b>0</b><span data-i="n.2">of our servers between you and your screen</span></div>
+      <div class="big reveal"><b>0</b><span data-i="n.2">accounts or extra apps to set up</span></div>
       <div class="big reveal"><b>1</b><span data-i="n.3">access key — and only you hold it</span></div>
       <div class="big reveal"><b>~50 MB</b><span data-i="n.4">of memory used on the laptop</span></div>
     </div>
@@ -551,18 +550,17 @@
     <div class="wrap">
       <div class="dl reveal">
         <div>
-          <div class="tag" style="margin-bottom:18px"><i></i><span data-i="d2.tag">Free · 2 minutes to set up</span></div>
+          <div class="tag" style="margin-bottom:18px"><i></i><span data-i="d2.tag">Free · 1 minute to set up</span></div>
           <h2><span data-i="d2.t1">Get PocketComp</span> <span class="grad" data-i="d2.t2">for Windows.</span></h2>
           <a class="btn go big-btn" data-dl href="https://github.com/Shoxiazam/pocketcomp/releases/latest/download/PocketComp-Setup.exe">
             <svg class="ic"><use href="#i-down"/></svg><span data-i="d2.btn">Download PocketComp</span></a>
-          <p class="req" data-i="d2.req">Windows 10/11 · 64-bit · 83 MB · version 3.42</p>
+          <p class="req" data-i="d2.req">Windows 10/11 · 64-bit · 83 MB · version 3.43</p>
           <p class="soon" data-i="d2.phone">On the phone there’s nothing to install: the remote opens in Safari or Chrome. Mac version is in beta.</p>
         </div>
         <ol>
           <li><b data-i="d2.s1t">Install it on your laptop</b><span data-i="d2.s1p">Run PocketComp-Setup.exe and click Next. It starts with Windows by itself.</span>
             <div class="warn" data-i="d2.warn">Windows may say “Windows protected your PC” — the installer isn’t signed yet. Click “More info” → “Run anyway”.</div></li>
-          <li><b data-i="d2.s2t">Connect laptop and phone</b><span data-i="d2.s2p">Install the free Tailscale app on both and sign in to the same account.</span></li>
-          <li><b data-i="d2.s3t">Scan the QR code</b><span data-i="d2.s3p">The QR code opens on your laptop right after setup. Point the phone camera at it — done.</span></li>
+          <li><b data-i="d2.s3t">Scan the QR code with your phone</b><span data-i="d2.s3p">It opens on the laptop right after setup. The remote opens in Safari or Chrome — works from any network.</span></li>
         </ol>
       </div>
     </div>
@@ -578,7 +576,7 @@
       <div class="matrix reveal"><div class="mscroll" tabindex="0" role="region" aria-label="Comparison">
         <div class="mrow mhead"><span></span><span>PocketComp</span><span>TeamViewer</span><span>AnyDesk</span><span>Chrome Remote Desktop</span><span>RustDesk</span></div>
         <div class="mrow"><span data-i="w.r1">Laptop camera &amp; mic from the phone</span><span><i class="dot y">✓</i></span><span><i class="dot n">—</i></span><span><i class="dot n">—</i></span><span><i class="dot n">—</i></span><span><i class="dot n">—</i></span></div>
-        <div class="mrow"><span data-i="w.r2">Runs over your own private network</span><span><i class="dot y">✓</i></span><span><i class="dot n">—</i></span><span><i class="dot n">—</i></span><span><i class="dot n">—</i></span><span><i class="dot h">½</i></span></div>
+        <div class="mrow"><span data-i="w.r2">Nothing to install on the phone</span><span><i class="dot y">✓</i></span><span><i class="dot n">—</i></span><span><i class="dot n">—</i></span><span><i class="dot n">—</i></span><span><i class="dot n">—</i></span></div>
         <div class="mrow"><span data-i="w.r3">Free for personal use</span><span><i class="dot y">✓</i></span><span><i class="dot h">½</i></span><span><i class="dot h">½</i></span><span><i class="dot y">✓</i></span><span><i class="dot y">✓</i></span></div>
       </div></div>
       <div class="legend"><span><i class="dot y">✓</i><span data-i="w.l1">yes</span></span><span><i class="dot h">½</i><span data-i="w.l2">partly</span></span><span><i class="dot n">—</i><span data-i="w.l3">no</span></span></div>
@@ -640,11 +638,11 @@
     <div class="wrap">
       <div class="intro reveal">
         <div class="tag"><i></i><span data-i="r.tag">Traction &amp; roadmap</span></div>
-        <h2 data-i="r.title">Shipping today: version 3.42.</h2>
+        <h2 data-i="r.title">Shipping today: version 3.43.</h2>
       </div>
       <div class="road">
-        <div class="ms now reveal"><div class="when" data-i="r.now">Now · Nov 2026</div><h3 data-i="r.nt">Version 3.42 is live</h3>
-          <ul><li data-i="r.n1">Live screen up to 60 fps on a good connection</li><li data-i="r.n2">Windows 10/11 and iPhone tested on real devices</li><li data-i="r.n3">macOS and Android in beta</li><li data-i="r.n4">View-only share links and all your computers in one list</li><li data-i="r.n5">English, Uzbek and Russian</li></ul></div>
+        <div class="ms now reveal"><div class="when" data-i="r.now">Now · Nov 2026</div><h3 data-i="r.nt">Version 3.43 is live</h3>
+          <ul><li data-i="r.n1">Live screen up to 60 fps on a good connection</li><li data-i="r.n2">Windows 10/11 and iPhone tested on real devices</li><li data-i="r.n3">macOS and Android in beta</li><li data-i="r.n4">View-only share links and all your computers in one list</li><li data-i="r.n5">Works from any network — no Tailscale, no accounts</li></ul></div>
         <div class="ms next reveal"><div class="when" data-i="r.next">Next</div><h3 data-i="r.xt">No more warnings, no more beta</h3>
           <ul><li data-i="r.x1">Signed installers — no security warnings</li><li data-i="r.x2">macOS and Android out of beta</li><li data-i="r.x3">Faster first-time setup</li></ul></div>
         <div class="ms reveal"><div class="when" data-i="r.later">Later</div><h3 data-i="r.lt">Paid plans</h3>
@@ -676,7 +674,7 @@
         <div>
           <div class="tag" style="margin-bottom:18px"><i></i><span data-i="y.tag">Try it</span></div>
           <h2><span data-i="y.t1">Your laptop,</span> <span class="grad" data-i="y.t2">in your pocket.</span></h2>
-          <p data-i="y.lead">Your screen never touches our servers. Scan the code to open this page on your phone.</p>
+          <p data-i="y.lead">Encrypted on the way, never stored. Scan the code to open this page on your phone.</p>
           <div class="cta"><a class="btn go" href="#download"><svg class="ic" style="width:18px;height:18px"><use href="#i-down"/></svg><span data-i="y.cta">Download for Windows</span></a></div>
         </div>
         <div class="qr"><div class="code" id="qr" role="img" aria-label="QR code to this website"></div><span data-i="y.scan">scan to open on your phone</span></div>
@@ -687,7 +685,7 @@
 
 <footer>
   <div class="wrap">
-    <span>PocketComp · v3.42</span>
+    <span>PocketComp · v3.43</span>
     <span>© <span id="year"></span></span>
     <span class="grow"></span>
     <span data-i="foot.made">Made in Uzbekistan</span>
@@ -706,8 +704,8 @@ const T = {
   en: {},
   ru: {
     "nav.features":"Возможности","nav.connect":"Подключение","nav.why":"Почему мы","nav.pricing":"Цены","nav.team":"Команда","nav.cta":"Скачать",
-    "hero.new":"Новое в v3.42: экран до 60 к/с","hero.t1":"Оставь ноутбук.","hero.t2":"Забери управление.",
-    "hero.lead":"PocketComp превращает телефон в пульт от ноутбука — экран, камера, микрофон, мышь и питание — через твою частную сеть. Твой экран никогда не попадает на наши серверы.",
+    "hero.new":"Новое в v3.43: работает из любой сети, без Tailscale","hero.t1":"Оставь ноутбук.","hero.t2":"Забери управление.",
+    "hero.lead":"PocketComp превращает телефон в пульт от ноутбука — экран, камера, микрофон, мышь и питание — из любой сети. На телефон ничего ставить не нужно. Всё зашифровано в пути и нигде не хранится.",
     "hero.cta":"Скачать для Windows","hero.tour":"Посмотреть, как работает","hero.beta":"macOS и Android · бета","hero.nostore":"Без App Store",
     "hero.f1":"поток","hero.f2":"маршрут","hero.f2b":"телефон ⇄ твой ноутбук",
     "d.tag":"Обычный день","d.title":"Ноутбук остаётся дома. А твой день — нет.",
@@ -722,16 +720,16 @@ const T = {
     "f.4t":"Блокировка и сон","f.4p":"Блокировка, сон, перезагрузка или выключение одним касанием — откуда угодно.",
     "f.5t":"Мышь и клавиатура","f.5p":"Мышь как тачпад, правый клик, прокрутка и ввод на русском и английском.",
     "f.6t":"Буфер и приложения","f.6p":"Скопировал на телефоне — вставил на ноутбуке. И запуск твоих программ.",
-    "c.tag":"Как подключается","c.title":"Прямая линия от телефона к ноутбуку.",
-    "c.lead":"PocketComp работает на твоём ноутбуке и общается с телефоном через твою частную сеть. Никакого аккаунта у нас и никакой копии экрана в облаке.",
-    "c.phone":"твой телефон","c.pipe":"зашифровано · частная сеть","c.laptop":"твой ноутбук",
-    "c.1t":"Установи","c.1p":"Запусти установщик на ноутбуке с Windows или Mac. Дальше он стартует сам.",
+    "c.tag":"Как подключается","c.title":"Установил. Отсканировал. Готово.",
+    "c.lead":"PocketComp держит одно зашифрованное соединение от ноутбука к посреднику PocketComp. Телефон находит ноутбук через него из любой сети — без аккаунтов, лишних приложений и хранения данных.",
+    "c.phone":"твой телефон","c.pipe":"зашифровано · посредник PocketComp","c.laptop":"твой ноутбук",
+    "c.1t":"Установи","c.1p":"Запусти установщик на ноутбуке с Windows. Дальше он сам запускается вместе с Windows.",
     "c.2t":"Войди","c.2p":"Подключи ноутбук и телефон к своей бесплатной сети Tailscale.",
-    "c.3t":"Отсканируй QR","c.3p":"Отсканируй код на ноутбуке, чтобы привязать телефон.",
+    "c.3t":"Отсканируй QR","c.3p":"QR-код открывается на ноутбуке сразу после установки. Наведи на него камеру телефона.",
     "c.4t":"Управляй","c.4p":"Экран, камера, мышь, клавиатура и питание — готово.",
-    "n.1":"экран вживую при хорошей связи","n.2":"наших серверов между тобой и твоим экраном","n.3":"ключ доступа — и он только у тебя","n.4":"памяти занимает на ноутбуке",
+    "n.1":"экран вживую при хорошей связи","n.2":"аккаунтов и лишних приложений","n.3":"ключ доступа — и он только у тебя","n.4":"памяти занимает на ноутбуке",
     "w.tag":"Почему PocketComp","w.title":"Сделано для одного человека и его ноутбука — а не для IT-отдела.",
-    "w.r1":"Камера и микрофон ноутбука с телефона","w.r2":"Работает через твою частную сеть","w.r3":"Бесплатно для личного использования",
+    "w.r1":"Камера и микрофон ноутбука с телефона","w.r2":"На телефон ничего ставить не нужно","w.r3":"Бесплатно для личного использования",
     "w.l1":"да","w.l2":"частично","w.l3":"нет",
     "w.n1":"Много функций, но бесплатная версия ругается на «коммерческое использование», а тарифы дорогие.",
     "w.n2":"Быстрый и лёгкий, но бесплатный тариф ограничен, а в 2024 году была утечка.",
@@ -748,28 +746,28 @@ const T = {
     "p.p1":"Несколько ноутбуков","p.p2":"Камера и микрофон","p.p3":"Приоритетные обновления и поддержка",
     "p.t1":"Общие офисные компьютеры","p.t2":"Централизованное управление ключами","p.t3":"Счета для компаний",
     "p.note":"Предлагаемые цены. Сейчас PocketComp можно попробовать бесплатно.",
-    "r.tag":"Результаты и планы","r.title":"Уже работает: версия 3.42.","r.now":"Сейчас · ноябрь 2026","r.next":"Дальше","r.later":"Потом",
-    "r.nt":"Версия 3.42 вышла","r.n1":"Экран вживую до 60 к/с при хорошей связи","r.n2":"Windows 10/11 и iPhone проверены на реальных устройствах","r.n3":"macOS и Android в бете",
+    "r.tag":"Результаты и планы","r.title":"Уже работает: версия 3.43.","r.now":"Сейчас · ноябрь 2026","r.next":"Дальше","r.later":"Потом",
+    "r.nt":"Версия 3.43 вышла","r.n1":"Экран вживую до 60 к/с при хорошей связи","r.n2":"Windows 10/11 и iPhone проверены на реальных устройствах","r.n3":"macOS и Android в бете",
     "r.xt":"Без предупреждений и без беты","r.x1":"Подписанные установщики — без предупреждений безопасности","r.x2":"macOS и Android выходят из беты","r.x3":"Быстрая первая настройка",
     "r.lt":"Платные тарифы","r.l1":"Запуск тарифа Pro","r.l2":"Тариф Teams для офисов",
     "t.tag":"Команда","t.title":"Положим каждый ноутбук в карман.","t.r1":"CEO · Основатель","t.raising":"Мы привлекаем",
     "t.a1":"Подписать установщики и провести аудит безопасности","t.a2":"Вывести macOS и Android из беты","t.a3":"Получить первых платящих пользователей",
-    "y.tag":"Попробуй","y.t1":"Твой ноутбук —","y.t2":"в кармане.","y.lead":"Твой экран никогда не попадает на наши серверы. Отсканируй код, чтобы открыть эту страницу на телефоне.",
+    "y.tag":"Попробуй","y.t1":"Твой ноутбук —","y.t2":"в кармане.","y.lead":"Зашифровано в пути и нигде не хранится. Отсканируй код, чтобы открыть эту страницу на телефоне.",
     "y.cta":"Скачать для Windows","y.scan":"сканируй, чтобы открыть на телефоне","f.7t":"Показать экран","f.7p":"Отправь ссылку только на просмотр — от 15 минут до 4 часов: человек смотрит, но не может нажимать, печатать или открывать файлы. Отозвать можно в любой момент.",
     "f.8t":"Все твои компьютеры","f.8p":"Домашний ноутбук, рабочий ПК — один список на телефоне, и видно, какие сейчас в сети.",
-    "d2.tag":"Бесплатно · настройка за 2 минуты","d2.t1":"Скачай PocketComp","d2.t2":"для Windows.","d2.btn":"Скачать PocketComp",
-    "d2.req":"Windows 10/11 · 64 бит · 83 МБ · версия 3.42","d2.phone":"На телефон ничего ставить не нужно: пульт открывается в Safari или Chrome. Версия для Mac — в бете.",
+    "d2.tag":"Бесплатно · настройка за 1 минуту","d2.t1":"Скачай PocketComp","d2.t2":"для Windows.","d2.btn":"Скачать PocketComp",
+    "d2.req":"Windows 10/11 · 64 бит · 83 МБ · версия 3.43","d2.phone":"На телефон ничего ставить не нужно: пульт открывается в Safari или Chrome. Версия для Mac — в бете.",
     "d2.s1t":"Установи на ноутбук","d2.s1p":"Запусти PocketComp-Setup.exe и нажми «Далее». Дальше он сам запускается вместе с Windows.",
     "d2.warn":"Windows может написать «Система Windows защитила ваш компьютер» — установщик пока не подписан. Нажми «Подробнее» → «Выполнить в любом случае».",
     "d2.s2t":"Соедини ноутбук и телефон","d2.s2p":"Поставь бесплатное приложение Tailscale на оба и войди в один и тот же аккаунт.",
-    "d2.s3t":"Отсканируй QR-код","d2.s3p":"QR-код откроется на ноутбуке сразу после установки. Наведи на него камеру телефона — готово.",
-    "r.n4":"Ссылки «только просмотр» и все компьютеры в одном списке","r.n5":"Английский, узбекский и русский",
+    "d2.s3t":"Отсканируй QR-код телефоном","d2.s3p":"Он откроется на ноутбуке сразу после установки. Пульт откроется в Safari или Chrome — работает из любой сети.",
+    "r.n4":"Ссылки «только просмотр» и все компьютеры в одном списке","r.n5":"Работает из любой сети — без Tailscale и аккаунтов",
     "foot.made":"Сделано в Узбекистане"
   },
   uz: {
     "nav.features":"Imkoniyatlar","nav.connect":"Ulanish","nav.why":"Nega biz","nav.pricing":"Narxlar","nav.team":"Jamoa","nav.cta":"Yuklab olish",
-    "hero.new":"v3.42 da yangi: ekran 60 kadr/s gacha","hero.t1":"Noutbukni qoldiring.","hero.t2":"Boshqaruvni oling.",
-    "hero.lead":"PocketComp telefoningizni noutbuk pultiga aylantiradi — ekran, kamera, mikrofon, sichqoncha va quvvat — o‘z xususiy tarmog‘ingiz orqali. Ekraningiz hech qachon bizning serverlarimizga tushmaydi.",
+    "hero.new":"v3.43 da yangi: istalgan tarmoqdan, Tailscale’siz","hero.t1":"Noutbukni qoldiring.","hero.t2":"Boshqaruvni oling.",
+    "hero.lead":"PocketComp telefoningizni noutbuk pultiga aylantiradi — ekran, kamera, mikrofon, sichqoncha va quvvat — istalgan tarmoqdan. Telefonga hech narsa o‘rnatish shart emas. Yo‘lda shifrlangan, hech qayerda saqlanmaydi.",
     "hero.cta":"Windows uchun yuklab olish","hero.tour":"Qanday ishlashini ko‘rish","hero.beta":"macOS va Android · beta","hero.nostore":"App Store’siz",
     "hero.f1":"oqim","hero.f2":"yo‘nalish","hero.f2b":"telefon ⇄ noutbukingiz",
     "d.tag":"Oddiy kun","d.title":"Noutbuk uyda qoladi. Kuningiz esa yo‘q.",
@@ -784,16 +782,16 @@ const T = {
     "f.4t":"Bloklash va uyqu","f.4p":"Bloklash, uyqu, qayta yuklash yoki o‘chirish — bir bosishda, istalgan joydan.",
     "f.5t":"Sichqoncha va klaviatura","f.5p":"Tachpad kabi sichqoncha, o‘ng tugma, aylantirish va ingliz hamda rus tilida yozish.",
     "f.6t":"Bufer va ilovalar","f.6p":"Telefonda nusxa oling — noutbukda qo‘ying. Va ilovalaringizni ishga tushiring.",
-    "c.tag":"Qanday ulanadi","c.title":"Telefoningizdan noutbukingizgacha to‘g‘ri chiziq.",
-    "c.lead":"PocketComp noutbukingizda ishlaydi va telefon bilan o‘z xususiy tarmog‘ingiz orqali bog‘lanadi. Bizda akkaunt yo‘q, bulutda ekran nusxasi yo‘q.",
-    "c.phone":"telefoningiz","c.pipe":"shifrlangan · xususiy tarmoq","c.laptop":"noutbukingiz",
-    "c.1t":"O‘rnating","c.1p":"Windows yoki Mac noutbukda o‘rnatuvchini ishga tushiring. Keyin o‘zi ishga tushadi.",
+    "c.tag":"Qanday ulanadi","c.title":"O‘rnatdingiz. Skanerladingiz. Tayyor.",
+    "c.lead":"PocketComp noutbukdan PocketComp vositachisiga bitta shifrlangan ulanishni ushlab turadi. Telefon noutbukni u orqali istalgan tarmoqdan topadi — akkauntlarsiz, ortiqcha ilovalarsiz va ma’lumot saqlamasdan.",
+    "c.phone":"telefoningiz","c.pipe":"shifrlangan · PocketComp vositachisi","c.laptop":"noutbukingiz",
+    "c.1t":"O‘rnating","c.1p":"Windows noutbukda o‘rnatuvchini ishga tushiring. Keyin u Windows bilan birga o‘zi ishga tushadi.",
     "c.2t":"Kiring","c.2p":"Noutbuk va telefonni bepul Tailscale tarmog‘ingizga ulang.",
-    "c.3t":"QR’ni skanerlang","c.3p":"Telefonni bog‘lash uchun noutbukdagi kodni skanerlang.",
+    "c.3t":"QR’ni skanerlang","c.3p":"QR-kod o‘rnatishdan so‘ng darhol noutbukda ochiladi. Telefon kamerasini unga qarating.",
     "c.4t":"Boshqaring","c.4p":"Ekran, kamera, sichqoncha, klaviatura va quvvat — tayyor.",
-    "n.1":"yaxshi aloqada jonli ekran","n.2":"siz va ekraningiz orasida bizning serverlarimiz","n.3":"kirish kaliti — u faqat sizda","n.4":"noutbukda egallaydigan xotira",
+    "n.1":"yaxshi aloqada jonli ekran","n.2":"akkaunt va ortiqcha ilova","n.3":"kirish kaliti — u faqat sizda","n.4":"noutbukda egallaydigan xotira",
     "w.tag":"Nega PocketComp","w.title":"Bitta inson va uning noutbuki uchun — IT bo‘limi uchun emas.",
-    "w.r1":"Noutbuk kamerasi va mikrofoni telefondan","w.r2":"O‘z xususiy tarmog‘ingizda ishlaydi","w.r3":"Shaxsiy foydalanish uchun bepul",
+    "w.r1":"Noutbuk kamerasi va mikrofoni telefondan","w.r2":"Telefonga hech narsa o‘rnatish shart emas","w.r3":"Shaxsiy foydalanish uchun bepul",
     "w.l1":"ha","w.l2":"qisman","w.l3":"yo‘q",
     "w.n1":"Ko‘p funksiyali, lekin bepul versiya «tijoriy foydalanish» deb belgilaydi va tariflar qimmat.",
     "w.n2":"Tez va yengil, lekin bepul tarif cheklangan va 2024 yilda xavfsizlik buzilishi bo‘lgan.",
@@ -810,22 +808,22 @@ const T = {
     "p.p1":"Bir nechta noutbuk","p.p2":"Kamera va mikrofon","p.p3":"Ustuvor yangilanish va yordam",
     "p.t1":"Umumiy ofis kompyuterlari","p.t2":"Kalitlarni markaziy boshqarish","p.t3":"Kompaniyalar uchun hisob-fakturalar",
     "p.note":"Taklif etilayotgan narxlar. Hozir PocketComp’ni bepul sinab ko‘rish mumkin.",
-    "r.tag":"Natijalar va reja","r.title":"Bugun ishlayapti: 3.42 versiya.","r.now":"Hozir · noyabr 2026","r.next":"Keyingi","r.later":"Keyinroq",
-    "r.nt":"3.42 versiya chiqdi","r.n1":"Yaxshi aloqada 60 kadr/s gacha jonli ekran","r.n2":"Windows 10/11 va iPhone haqiqiy qurilmalarda sinovdan o‘tgan","r.n3":"macOS va Android beta holatida",
+    "r.tag":"Natijalar va reja","r.title":"Bugun ishlayapti: 3.43 versiya.","r.now":"Hozir · noyabr 2026","r.next":"Keyingi","r.later":"Keyinroq",
+    "r.nt":"3.43 versiya chiqdi","r.n1":"Yaxshi aloqada 60 kadr/s gacha jonli ekran","r.n2":"Windows 10/11 va iPhone haqiqiy qurilmalarda sinovdan o‘tgan","r.n3":"macOS va Android beta holatida",
     "r.xt":"Ogohlantirishlarsiz va betasiz","r.x1":"Imzolangan o‘rnatuvchilar — xavfsizlik ogohlantirishlarisiz","r.x2":"macOS va Android betadan chiqadi","r.x3":"Tezroq birinchi sozlash",
     "r.lt":"Pullik tariflar","r.l1":"Pro tarifini ishga tushirish","r.l2":"Ofislar uchun Teams tarifi",
     "t.tag":"Jamoa","t.title":"Har bir noutbukni cho‘ntakka solamiz.","t.r1":"CEO · Asoschi","t.raising":"Biz jalb qilyapmiz",
     "t.a1":"O‘rnatuvchilarni imzolash va xavfsizlik auditini o‘tkazish","t.a2":"macOS va Android’ni betadan chiqarish","t.a3":"Birinchi pullik foydalanuvchilarni topish",
-    "y.tag":"Sinab ko‘ring","y.t1":"Noutbukingiz —","y.t2":"cho‘ntagingizda.","y.lead":"Ekraningiz hech qachon bizning serverlarimizga tushmaydi. Bu sahifani telefonda ochish uchun kodni skanerlang.",
+    "y.tag":"Sinab ko‘ring","y.t1":"Noutbukingiz —","y.t2":"cho‘ntagingizda.","y.lead":"Yo‘lda shifrlangan va hech qayerda saqlanmaydi. Bu sahifani telefonda ochish uchun kodni skanerlang.",
     "y.cta":"Windows uchun yuklab olish","y.scan":"telefonda ochish uchun skanerlang","f.7t":"Ekranni ko‘rsatish","f.7p":"Faqat ko‘rish uchun havola yuboring — 15 daqiqadan 4 soatgacha: odam ko‘radi, lekin bosa olmaydi, yoza olmaydi va fayl ocha olmaydi. Istalgan vaqtda bekor qilish mumkin.",
     "f.8t":"Barcha kompyuterlaringiz","f.8p":"Uydagi noutbuk, ishdagi kompyuter — telefonda bitta ro‘yxat, qaysilari tarmoqda ekani ko‘rinadi.",
-    "d2.tag":"Bepul · 2 daqiqada sozlanadi","d2.t1":"Windows uchun","d2.t2":"PocketComp’ni yuklab oling.","d2.btn":"PocketComp’ni yuklab olish",
-    "d2.req":"Windows 10/11 · 64 bit · 83 MB · 3.42 versiya","d2.phone":"Telefonga hech narsa o‘rnatish shart emas: pult Safari yoki Chrome’da ochiladi. Mac versiyasi — beta.",
+    "d2.tag":"Bepul · 1 daqiqada sozlanadi","d2.t1":"Windows uchun","d2.t2":"PocketComp’ni yuklab oling.","d2.btn":"PocketComp’ni yuklab olish",
+    "d2.req":"Windows 10/11 · 64 bit · 83 MB · 3.43 versiya","d2.phone":"Telefonga hech narsa o‘rnatish shart emas: pult Safari yoki Chrome’da ochiladi. Mac versiyasi — beta.",
     "d2.s1t":"Noutbukka o‘rnating","d2.s1p":"PocketComp-Setup.exe ni ishga tushiring va «Keyingi»ni bosing. Keyin u Windows bilan birga o‘zi ishga tushadi.",
     "d2.warn":"Windows «Windows kompyuteringizni himoya qildi» deb yozishi mumkin — o‘rnatuvchi hali imzolanmagan. «Batafsil» → «Baribir ishga tushirish»ni bosing.",
     "d2.s2t":"Noutbuk va telefonni ulang","d2.s2p":"Ikkalasiga bepul Tailscale ilovasini o‘rnating va bitta akkauntga kiring.",
-    "d2.s3t":"QR-kodni skanerlang","d2.s3p":"QR-kod o‘rnatishdan so‘ng darhol noutbukda ochiladi. Telefon kamerasini unga qarating — tayyor.",
-    "r.n4":"«Faqat ko‘rish» havolalari va barcha kompyuterlar bitta ro‘yxatda","r.n5":"Ingliz, o‘zbek va rus tillari",
+    "d2.s3t":"QR-kodni telefon bilan skanerlang","d2.s3p":"U o‘rnatishdan so‘ng darhol noutbukda ochiladi. Pult Safari yoki Chrome’da ochiladi — istalgan tarmoqdan ishlaydi.",
+    "r.n4":"«Faqat ko‘rish» havolalari va barcha kompyuterlar bitta ro‘yxatda","r.n5":"Istalgan tarmoqdan ishlaydi — Tailscale’siz va akkauntlarsiz",
     "foot.made":"O‘zbekistonda yaratilgan"
   }
 };

@@ -108,7 +108,9 @@ function clean(e){
   if(!e||!KEY.test(e.k||''))return null;
   const n=String(e.n||'').slice(0,40)||'PocketComp';
   if(e.r&&TOPIC.test(e.r))return{n,k:e.k,r:e.r};
-  try{const u=new URL(e.u);if(/^https?:$/.test(u.protocol)&&!u.username&&!u.password)return{n,k:e.k,u:u.origin};}catch(_){}
+  try{const u=new URL(e.u);if(/^https?:$/.test(u.protocol)&&!u.username&&!u.password){
+      const go=u.pathname.match(/^\/go\/[0-9a-f]{24}/);      // ноутбук за посредником PocketComp
+      return{n,k:e.k,u:u.origin+(go?go[0]:'')};}}catch(_){}
   return null;
 }
 const same=(a,b)=>(a.r&&a.r===b.r)||(a.u&&a.u===b.u);
