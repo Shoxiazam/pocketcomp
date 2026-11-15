@@ -305,9 +305,10 @@
   .ms.now ul{color:var(--txt)}
 
   /* команда и раунд */
-  .crew{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
+  .crew{display:block}
   @media (max-width:860px){.crew{grid-template-columns:minmax(0,1fr)}}
-  .founders{display:grid;gap:14px}
+  .founders{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+  @media (max-width:700px){.founders{grid-template-columns:minmax(0,1fr)}}
   .founder{display:flex;align-items:center;gap:16px;padding:20px;border-radius:var(--r);background:var(--card);border:1px solid var(--line)}
   .ava{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;font:600 20px/1 var(--head);color:var(--ink);
     background:linear-gradient(140deg,var(--mint),var(--cyan));flex:none}
@@ -656,18 +657,13 @@
   <section class="part" id="team" style="padding-top:0">
     <div class="wrap">
       <div class="intro reveal">
-        <div class="tag"><i></i><span data-i="t.tag">Team &amp; the ask</span></div>
+        <div class="tag"><i></i><span data-i="t.tag">Team</span></div>
         <h2 data-i="t.title">Let’s put every laptop in a pocket.</h2>
       </div>
       <div class="crew">
         <div class="founders">
           <div class="founder reveal"><div class="ava">BB</div><div><h3>Bahodurov Bahriddin</h3><div class="role" data-i="t.r1">CEO · Founder</div></div></div>
           <div class="founder reveal"><div class="ava">RS</div><div><h3>Raxmatilloyev Shohruh</h3><div class="role">CTO</div></div></div>
-        </div>
-        <div class="raise reveal">
-          <div class="tag"><i></i><span data-i="t.raising">We’re raising</span></div>
-          <div class="amt grad">$30,000</div>
-          <ol><li data-i="t.a1">Sign the installers and run a security review</li><li data-i="t.a2">Take macOS and Android out of beta</li><li data-i="t.a3">Reach our first paying users</li></ol>
         </div>
       </div>
     </div>
@@ -756,7 +752,7 @@ const T = {
     "r.nt":"Версия 3.42 вышла","r.n1":"Экран вживую до 60 к/с при хорошей связи","r.n2":"Windows 10/11 и iPhone проверены на реальных устройствах","r.n3":"macOS и Android в бете",
     "r.xt":"Без предупреждений и без беты","r.x1":"Подписанные установщики — без предупреждений безопасности","r.x2":"macOS и Android выходят из беты","r.x3":"Быстрая первая настройка",
     "r.lt":"Платные тарифы","r.l1":"Запуск тарифа Pro","r.l2":"Тариф Teams для офисов",
-    "t.tag":"Команда и запрос","t.title":"Положим каждый ноутбук в карман.","t.r1":"CEO · Основатель","t.raising":"Мы привлекаем",
+    "t.tag":"Команда","t.title":"Положим каждый ноутбук в карман.","t.r1":"CEO · Основатель","t.raising":"Мы привлекаем",
     "t.a1":"Подписать установщики и провести аудит безопасности","t.a2":"Вывести macOS и Android из беты","t.a3":"Получить первых платящих пользователей",
     "y.tag":"Попробуй","y.t1":"Твой ноутбук —","y.t2":"в кармане.","y.lead":"Твой экран никогда не попадает на наши серверы. Отсканируй код, чтобы открыть эту страницу на телефоне.",
     "y.cta":"Скачать для Windows","y.scan":"сканируй, чтобы открыть на телефоне","f.7t":"Показать экран","f.7p":"Отправь ссылку только на просмотр — от 15 минут до 4 часов: человек смотрит, но не может нажимать, печатать или открывать файлы. Отозвать можно в любой момент.",
@@ -818,7 +814,7 @@ const T = {
     "r.nt":"3.42 versiya chiqdi","r.n1":"Yaxshi aloqada 60 kadr/s gacha jonli ekran","r.n2":"Windows 10/11 va iPhone haqiqiy qurilmalarda sinovdan o‘tgan","r.n3":"macOS va Android beta holatida",
     "r.xt":"Ogohlantirishlarsiz va betasiz","r.x1":"Imzolangan o‘rnatuvchilar — xavfsizlik ogohlantirishlarisiz","r.x2":"macOS va Android betadan chiqadi","r.x3":"Tezroq birinchi sozlash",
     "r.lt":"Pullik tariflar","r.l1":"Pro tarifini ishga tushirish","r.l2":"Ofislar uchun Teams tarifi",
-    "t.tag":"Jamoa va so‘rov","t.title":"Har bir noutbukni cho‘ntakka solamiz.","t.r1":"CEO · Asoschi","t.raising":"Biz jalb qilyapmiz",
+    "t.tag":"Jamoa","t.title":"Har bir noutbukni cho‘ntakka solamiz.","t.r1":"CEO · Asoschi","t.raising":"Biz jalb qilyapmiz",
     "t.a1":"O‘rnatuvchilarni imzolash va xavfsizlik auditini o‘tkazish","t.a2":"macOS va Android’ni betadan chiqarish","t.a3":"Birinchi pullik foydalanuvchilarni topish",
     "y.tag":"Sinab ko‘ring","y.t1":"Noutbukingiz —","y.t2":"cho‘ntagingizda.","y.lead":"Ekraningiz hech qachon bizning serverlarimizga tushmaydi. Bu sahifani telefonda ochish uchun kodni skanerlang.",
     "y.cta":"Windows uchun yuklab olish","y.scan":"telefonda ochish uchun skanerlang","f.7t":"Ekranni ko‘rsatish","f.7p":"Faqat ko‘rish uchun havola yuboring — 15 daqiqadan 4 soatgacha: odam ko‘radi, lekin bosa olmaydi, yoza olmaydi va fayl ocha olmaydi. Istalgan vaqtda bekor qilish mumkin.",
