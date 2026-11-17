@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PocketComp Privacy</title>
+<meta name="description" content="What PocketComp passes, what it never stores, and what anonymous statistics it sends.">
+<meta name="theme-color" content="#0b0d0f">
+<link rel="canonical" href="https://shoxiazam.github.io/pocketcomp/privacy.html">
+<link rel="icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b0d0f; --card:#14171a; --line:#242a2f; --txt:#eceff1; --mut:#8d959d; --dim:#5d656c;
+    --mint:#62e6b0; --red:#ff6b6b; --ink:#062018;
+    --head:"Space Grotesk","Inter",system-ui,sans-serif; --mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;color:var(--txt);background:var(--bg);font:400 16px/1.65 "Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif}
+  a{color:var(--mint)}
+  .wrap{max-width:760px;margin:0 auto;padding:0 16px}
+  header{display:flex;align-items:center;gap:12px;padding:20px 0;border-bottom:1px solid var(--line)}
+  header a.home{display:flex;align-items:center;gap:10px;color:var(--txt);text-decoration:none;font:600 17px var(--head)}
+  header img{width:28px;height:28px;border-radius:8px}
+  .grow{flex:1}
+  .lang{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  .lang button{background:none;border:0;color:var(--mut);font:500 13px var(--mono);padding:8px 11px;cursor:pointer;min-height:36px}
+  .lang button[aria-pressed=true]{background:var(--card);color:var(--txt)}
+  h1{font:600 clamp(30px,5vw,44px)/1.1 var(--head);margin:40px 0 12px;letter-spacing:-.02em}
+  h2{font:600 21px/1.25 var(--head);margin:36px 0 10px}
+  .lead{color:var(--mut);font-size:18px;margin:0 0 8px}
+  .upd{color:var(--dim);font:400 13px var(--mono)}
+  ul{padding-left:22px}li{margin:6px 0}
+  .box{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 20px;margin:18px 0}
+  .box.never{border-color:rgba(98,230,176,.35)}
+  .box h3{margin:0 0 6px;font:600 16px var(--head)}
+  .box ul{margin:0}
+  code{font:400 14px var(--mono);background:var(--card);border:1px solid var(--line);border-radius:6px;padding:1px 6px}
+  footer{border-top:1px solid var(--line);margin-top:56px;padding:24px 0 calc(24px + env(safe-area-inset-bottom));font:400 13px var(--mono);color:var(--dim)}
+  [data-l]{display:none}
+  html[lang=en] [data-l=en],html[lang=ru] [data-l=ru],html[lang=uz] [data-l=uz]{display:block}
+  :focus-visible{outline:2px solid var(--mint);outline-offset:2px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a class="home" href="./"><img src="icon-192.png" alt="">PocketComp</a>
+    <span class="grow"></span>
+    <div class="lang" role="group" aria-label="Language">
+      <button data-lang="en" aria-pressed="true">EN</button><button data-lang="ru" aria-pressed="false">RU</button><button data-lang="uz" aria-pressed="false">UZ</button>
+    </div>
+  </header>
+
+  <!-- ───────────── English ───────────── -->
+  <main data-l="en">
+    <h1>Privacy</h1>
+    <p class="lead">PocketComp passes your screen, camera, sound and files between your laptop and your phone. It never keeps them.</p>
+    <p class="upd">Updated 17 November 2026 · version 3.44</p>
+
+    <h2>How the connection works</h2>
+    <ul>
+      <li><b>At home</b>, on the same Wi-Fi, the phone talks to the laptop directly. Nothing leaves your network.</li>
+      <li><b>From any other network</b>, the connection goes through the PocketComp relay on Cloudflare. Both legs are encrypted (HTTPS/WSS). The relay forwards the data in memory and writes none of it to disk.</li>
+      <li>To be precise: this is encryption in transit, not end-to-end encryption. The relay has to unpack each message for a moment to pass it on. We don't record or inspect what passes through.</li>
+      <li>Every phone needs the laptop's key. After 10 wrong attempts access is blocked for 15 minutes. You can change the key at any time, which disconnects all phones.</li>
+    </ul>
+
+    <div class="box never">
+      <h3>What we never collect</h3>
+      <ul>
+        <li>Your screen, camera, microphone or sound</li>
+        <li>Your files, clipboard, keystrokes or passwords</li>
+        <li>Your name, email or IP address</li>
+      </ul>
+    </div>
+
+    <h2>Anonymous statistics and crash reports</h2>
+    <p>They tell us whether PocketComp works for people and what breaks. Every 6 hours the laptop sends:</p>
+    <ul>
+      <li>a random install number (not linked to your key, your link or you)</li>
+      <li>the PocketComp and Windows versions</li>
+      <li>your country, taken from the connection by Cloudflare (the IP address itself is not stored)</li>
+      <li>counters: sessions, minutes of use, how the phone connected (home, relay, backup tunnel), how many times the camera, files and view-only links were used, and the number of paired phones</li>
+      <li>crash reports: the error text, with your Windows user name removed from file paths</li>
+    </ul>
+    <p>You can turn this off: <b>Admin panel → Settings → Anonymous stats and crash reports</b>.</p>
+
+    <h2>Messages you send us</h2>
+    <p>The <b>“Report a problem”</b> form sends what you write and, only if you fill it in, a contact for our reply. If you tick “attach the technical log”, the last 40 lines of the laptop's log are added. They can contain file names and device addresses.</p>
+
+    <h2>Where it is kept and for how long</h2>
+    <ul>
+      <li>Statistics and messages are stored by the PocketComp relay on Cloudflare. Messages and crash reports are deleted after 180 days. Daily counters are kept so that we can see growth over time.</li>
+      <li>Your key, settings and log stay on your laptop in <code>%LOCALAPPDATA%\PocketComp</code>. Delete that folder to remove them.</li>
+      <li>Want your messages deleted? Ask through the same form and we will delete them.</li>
+    </ul>
+
+    <h2>Rules of use</h2>
+    <ul>
+      <li>Use PocketComp only on computers you own or are allowed to control.</li>
+      <li>While someone is connected, an indicator stays on the laptop screen, and it can't be turned off. It turns red when the microphone is on.</li>
+      <li>PocketComp is provided as is. We fix problems as fast as we can, but we can't promise it will never fail.</li>
+    </ul>
+  </main>
+
+  <!-- ───────────── Русский ───────────── -->
+  <main data-l="ru">
+    <h1>Конфиденциальность</h1>
+    <p class="lead">PocketComp передаёт экран, камеру, звук и файлы между ноутбуком и телефоном. Сам он их не хранит.</p>
+    <p class="upd">Обновлено 17 ноября 2026 · версия 3.44</p>
+
+    <h2>Как устроена связь</h2>
+    <ul>
+      <li><b>Дома</b>, в одной сети Wi-Fi, телефон связывается с ноутбуком напрямую. Ничего не выходит за пределы вашей сети.</li>
+      <li><b>Из любой другой сети</b> связь идёт через посредника PocketComp на Cloudflare. Оба участка пути зашифрованы (HTTPS/WSS). Посредник передаёт данные в памяти и ничего не записывает на диск.</li>
+      <li>Если точно: это шифрование в пути, а не сквозное шифрование. Чтобы передать сообщение дальше, посредник на мгновение его распаковывает. Мы не записываем и не просматриваем то, что через него проходит.</li>
+      <li>Каждому телефону нужен ключ ноутбука. После 10 неверных попыток вход блокируется на 15 минут. Ключ можно сменить в любой момент, и тогда все телефоны отключатся.</li>
+    </ul>
+
+    <div class="box never">
+      <h3>Чего мы не собираем никогда</h3>
+      <ul>
+        <li>Экран, камеру, микрофон и звук</li>
+        <li>Файлы, буфер обмена, нажатия клавиш и пароли</li>
+        <li>Имя, почту и IP-адрес</li>
+      </ul>
+    </div>
+
+    <h2>Анонимная статистика и отчёты о сбоях</h2>
+    <p>По ним мы понимаем, работает ли PocketComp у людей и что ломается. Раз в 6 часов ноутбук отправляет:</p>
+    <ul>
+      <li>случайный номер установки (он не связан с вашим ключом, ссылкой и с вами)</li>
+      <li>версии PocketComp и Windows</li>
+      <li>страну, которую Cloudflare определяет по соединению (сам IP-адрес не сохраняется)</li>
+      <li>счётчики: число сеансов, минуты использования, способ подключения телефона (дома, через посредника, через запасной туннель), сколько раз включали камеру, передавали файлы и создавали ссылки «только просмотр», а также число подключённых телефонов</li>
+      <li>отчёты о сбоях: текст ошибки, из путей к файлам удаляется имя пользователя Windows</li>
+    </ul>
+    <p>Это можно выключить: <b>Админ-панель → Настройки → Анонимная статистика и отчёты о сбоях</b>.</p>
+
+    <h2>Сообщения, которые вы нам пишете</h2>
+    <p>Форма <b>«Сообщить о проблеме»</b> отправляет ваш текст и контакт для ответа, если вы его указали. Если поставить галочку «приложить технический журнал», добавятся последние 40 строк журнала ноутбука. В них могут быть имена файлов и адреса устройств.</p>
+
+    <h2>Где хранится и сколько</h2>
+    <ul>
+      <li>Статистику и сообщения хранит посредник PocketComp на Cloudflare. Сообщения и отчёты о сбоях удаляются через 180 дней. Дневные счётчики остаются, чтобы видеть рост.</li>
+      <li>Ключ, настройки и журнал остаются на ноутбуке в папке <code>%LOCALAPPDATA%\PocketComp</code>. Удалите эту папку, и они исчезнут.</li>
+      <li>Хотите удалить свои сообщения? Напишите через ту же форму, и мы удалим их.</li>
+    </ul>
+
+    <h2>Правила использования</h2>
+    <ul>
+      <li>Пользуйтесь PocketComp только на своих компьютерах или на тех, которыми вам разрешили управлять.</li>
+      <li>Пока кто-то подключён, на экране ноутбука горит индикатор, и выключить его нельзя. Когда включён микрофон, он красный.</li>
+      <li>PocketComp предоставляется «как есть». Мы исправляем ошибки как можно быстрее, но не обещаем, что сбоев не будет никогда.</li>
+    </ul>
+  </main>
+
+  <!-- ───────────── O‘zbekcha ───────────── -->
+  <main data-l="uz">
+    <h1>Maxfiylik</h1>
+    <p class="lead">PocketComp ekran, kamera, ovoz va fayllarni noutbuk bilan telefon o‘rtasida uzatadi. O‘zi ularni saqlamaydi.</p>
+    <p class="upd">Yangilangan: 2026-yil 17-noyabr · 3.44 versiya</p>
+
+    <h2>Aloqa qanday ishlaydi</h2>
+    <ul>
+      <li><b>Uyda</b>, bitta Wi-Fi tarmog‘ida telefon noutbuk bilan to‘g‘ridan-to‘g‘ri bog‘lanadi. Hech narsa tarmog‘ingizdan tashqariga chiqmaydi.</li>
+      <li><b>Boshqa har qanday tarmoqdan</b> aloqa Cloudflare’dagi PocketComp vositachisi orqali o‘tadi. Yo‘lning ikkala qismi ham shifrlangan (HTTPS/WSS). Vositachi ma’lumotni xotirada uzatadi va diskka hech narsa yozmaydi.</li>
+      <li>Aniqroq aytsak: bu yo‘ldagi shifrlash, uchdan-uchgacha shifrlash emas. Xabarni uzatish uchun vositachi uni bir lahzaga ochadi. Undan o‘tayotgan narsani yozib olmaymiz va ko‘rmaymiz.</li>
+      <li>Har bir telefonga noutbuk kaliti kerak. 10 ta noto‘g‘ri urinishdan keyin kirish 15 daqiqaga bloklanadi. Kalitni istalgan vaqtda almashtirish mumkin, shunda barcha telefonlar uziladi.</li>
+    </ul>
+
+    <div class="box never">
+      <h3>Hech qachon yig‘maydiganlarimiz</h3>
+      <ul>
+        <li>Ekran, kamera, mikrofon va ovoz</li>
+        <li>Fayllar, bufer, tugma bosishlari va parollar</li>
+        <li>Ism, pochta va IP-manzil</li>
+      </ul>
+    </div>
+
+    <h2>Anonim statistika va nosozlik hisobotlari</h2>
+    <p>Ular orqali PocketComp odamlarda ishlayaptimi va nima buzilayotganini bilamiz. Har 6 soatda noutbuk quyidagilarni yuboradi:</p>
+    <ul>
+      <li>tasodifiy o‘rnatish raqami (u kalitingiz, havolangiz va siz bilan bog‘lanmagan)</li>
+      <li>PocketComp va Windows versiyalari</li>
+      <li>mamlakat, uni Cloudflare ulanish bo‘yicha aniqlaydi (IP-manzilning o‘zi saqlanmaydi)</li>
+      <li>hisoblagichlar: seanslar soni, foydalanish daqiqalari, telefon qanday ulangani (uyda, vositachi orqali, zaxira tunnel orqali), kamera, fayllar va «faqat ko‘rish» havolalari necha marta ishlatilgani, ulangan telefonlar soni</li>
+      <li>nosozlik hisobotlari: xato matni, fayl yo‘llaridan Windows foydalanuvchi nomi olib tashlanadi</li>
+    </ul>
+    <p>Buni o‘chirib qo‘yish mumkin: <b>Admin panel → Sozlamalar → Anonim statistika va nosozlik hisobotlari</b>.</p>
+
+    <h2>Bizga yozgan xabarlaringiz</h2>
+    <p><b>«Muammo haqida yozing»</b> formasi matningizni va, agar ko‘rsatgan bo‘lsangiz, javob uchun kontaktni yuboradi. «Texnik jurnalni qo‘shish» belgilansa, noutbuk jurnalining oxirgi 40 qatori qo‘shiladi. Ularda fayl nomlari va qurilma manzillari bo‘lishi mumkin.</p>
+
+    <h2>Qayerda va qancha saqlanadi</h2>
+    <ul>
+      <li>Statistika va xabarlarni Cloudflare’dagi PocketComp vositachisi saqlaydi. Xabarlar va nosozlik hisobotlari 180 kundan keyin o‘chiriladi. O‘sishni ko‘rish uchun kunlik hisoblagichlar qoladi.</li>
+      <li>Kalit, sozlamalar va jurnal noutbukda <code>%LOCALAPPDATA%\PocketComp</code> papkasida qoladi. Shu papkani o‘chirsangiz, ular yo‘qoladi.</li>
+      <li>Xabarlaringizni o‘chirishni xohlaysizmi? Shu forma orqali yozing, biz ularni o‘chiramiz.</li>
+    </ul>
+
+    <h2>Foydalanish qoidalari</h2>
+    <ul>
+      <li>PocketComp’dan faqat o‘z kompyuterlaringizda yoki boshqarishga ruxsat berilganlarida foydalaning.</li>
+      <li>Kimdir ulangan paytda noutbuk ekranida indikator yonib turadi va uni o‘chirib bo‘lmaydi. Mikrofon yoqilganda u qizil bo‘ladi.</li>
+      <li>PocketComp «boricha» taqdim etiladi. Xatolarni imkon qadar tez tuzatamiz, lekin nosozlik hech qachon bo‘lmaydi deb va’da bera olmaymiz.</li>
+    </ul>
+  </main>
+
+  <footer>PocketComp · <a href="./">shoxiazam.github.io/pocketcomp</a></footer>
+</div>
+<script>
+const TITLES={en:"PocketComp Privacy",ru:"PocketComp — конфиденциальность",uz:"PocketComp — maxfiylik"};
+function setLang(l){
+  l=TITLES[l]?l:"en";document.documentElement.lang=l;document.title=TITLES[l];
+  document.querySelectorAll("[data-lang]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.lang===l)));
+  try{localStorage.setItem("pc-lang",l);}catch(e){}
+}
+document.querySelectorAll("[data-lang]").forEach(b=>b.onclick=()=>setLang(b.dataset.lang));
+let saved="";try{saved=localStorage.getItem("pc-lang")||"";}catch(e){}
+setLang(saved||(navigator.language||"").slice(0,2));
+</script>
+</body>
+</html>
